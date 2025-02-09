@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="{
-      'shadow-lg': isScrolled,
+      'shadow-lg bg-gray-800': isScrolled,
     }"
     class="fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-16 flex justify-between items-center transition-all duration-300"
   >
@@ -10,30 +10,22 @@
       <a href="/" class="font-bruno">Y.</a>
     </div>
 
-    <!-- Navigation Linkleri (Desktop) -->
-    <div class="hidden sm:flex space-x-6 text-white">
-      <!-- Sayfa içi yönlendirme -->
-      <RouterLink to="#home" class="font-bruno text-lg hover:text-gray-300">
-        Home
-      </RouterLink>
-      <RouterLink to="#about" class="font-bruno text-lg hover:text-gray-300">
-        About Me
-      </RouterLink>
+    <!-- Desktop Navigation Links -->
+    <div class="hidden lg:flex space-x-6 text-white">
       <RouterLink
-        to="#mySkills"
-        class="font-bruno tex t-lg hover:text-gray-300"
+        v-for="link in links"
+        :key="link.to"
+        :to="link.to"
+        class="font-bruno text-lg hover:text-gray-300 hover:scale-110 transition-all duration-300 b-2"
       >
-        My Skills
-      </RouterLink>
-      <RouterLink to="#contact" class="font-bruno tex t-lg hover:text-gray-300">
-        Contact Me
+        {{ link.text }}
       </RouterLink>
     </div>
 
-    <!-- Hamburger Menu Butonu (sadece sm ve daha küçük ekranlar) -->
+    <!-- Hamburger Menu Button (for small and medium screens) -->
     <button
       @click="toggleMenu"
-      class="hamburger-btn text-white focus:outline-none relative z-50"
+      class="hamburger-btn text-white focus:outline-none relative z-50 lg:hidden"
     >
       <div
         :class="{ 'rotate-45 translate-y-2': isMenuOpen }"
@@ -49,105 +41,58 @@
       ></div>
     </button>
 
-    <!-- Mobil Menu -->
+    <!-- Mobile Menu -->
     <div
       :class="{ 'translate-x-0': isMenuOpen, 'translate-x-full': !isMenuOpen }"
-      class="fixed top-0 right-0 w-3/4 h-full bg-gray-900 text-white flex flex-col items-center py-16 space-y-8 shadow-lg transition-transform duration-500 md:hidden"
+      class="fixed top-0 right-0 w-3/4 h-full bg-gray-900 text-white flex flex-col items-center py-16 space-y-8 shadow-lg transition-transform duration-500 lg:hidden"
     >
-      <!-- Sayfa içi yönlendirme -->
       <RouterLink
+        v-for="link in links"
+        :key="link.to"
         @click="closeMenu"
-        to="#home"
+        :to="link.to"
         class="font-bruno text-xl hover:text-gray-300"
       >
-        Home
-      </RouterLink>
-      <RouterLink
-        @click="closeMenu"
-        to="#about"
-        class="font-bruno text-xl hover:text-gray-300"
-      >
-        About Me
-      </RouterLink>
-      <RouterLink
-        @click="closeMenu"
-        to="#mySkills"
-        class="font-bruno text-xl hover:text-gray-300"
-      >
-        My Skills
-      </RouterLink>
-      <RouterLink
-        @click="closeMenu"
-        to="#contact"
-        class="font-bruno text-xl hover:text-gray-300"
-      >
-        Contact Me
+        {{ link.text }}
       </RouterLink>
     </div>
   </nav>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      isScrolled: false,
-      isMenuOpen: false,
-    };
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
-  methods: {
-    handleScroll() {
-      this.isScrolled = window.scrollY > 0;
-    },
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-    },
-    closeMenu() {
-      this.isMenuOpen = false;
-    },
-  },
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+const isScrolled = ref(false);
+const isMenuOpen = ref(false);
+
+const links = [
+  { to: '#home', text: 'Home' },
+  { to: '#about', text: 'About Me' },
+  { to: '#mySkills', text: 'My Skills' },
+  { to: '#contact', text: 'Contact Me' },
+];
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 0;
 };
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+
+const closeMenu = () => {
+  isMenuOpen.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <style scoped>
-nav {
-  background-color: transparent;
-  box-shadow: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-nav.shadow-lg {
-  background-color: #35495e;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-a:hover {
-  color: #fff;
-  border-bottom: 2px solid #fff;
-}
-.hamburger-btn {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-}
-
-@media (max-width: 639px) {
-  .hamburger-btn {
-    display: flex;
-  }
-}
-
-.fixed {
-  top: 0;
-  right: 0;
-}
+/* No custom CSS needed anymore, everything is handled by Tailwind */
 </style>

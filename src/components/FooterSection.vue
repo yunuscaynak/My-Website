@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-gray-800 text-white py-4 mt-auto bottom-0 left-0 w-full">
     <div class="max-w-screen-xl mx-auto text-center">
-      <p>&copy; 2024 - Your Company. All rights reserved.</p>
+      <p>&copy; 2024 - caynakyunus. All rights reserved.</p>
       <p class="text-sm text-gray-400">
         Built with Vue.js, Tailwind CSS, and Firebase
       </p>
@@ -20,9 +20,3 @@
     </div>
   </footer>
 </template>
-  
-<style scoped>
-footer {
-  width: 100%;
-}
-</style>

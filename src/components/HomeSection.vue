@@ -1,22 +1,22 @@
 <template>
-  <section id="home" class="pt-10 pb-10">
-    <h1 class="font-bruno text-lg sm:text-xl text-white pt-10 pb-4">
+  <section id="home" class="pt-10 pb-10 h-screen ">
+    <h1 class="font-bruno text-xl sm:text-2xl text-white pt-10 pb-4">
       Hi, my name is
     </h1>
     <p
-      class="font-bruno text-5xl sm:text-6xl md:text-7xl text-gray-300 pt-10 pb-10"
+      class="font-bruno text-5xl sm:text-6xl md:text-7xl text-gray-300 pt-[100px] pb-10"
     >
       Yunus.
     </p>
     <h3
-      class="font-bruno text-2xl sm:text-3xl md:text-4xl text-gray-300 pt-10 pb-14"
+      class="font-bruno text-2xl sm:text-3xl md:text-4xl text-gray-300 pt-[120px] pb-14"
     >
       _I'm a <b>Frontend</b> developer
     </h3>
     <div class="textDiv pt-3">
       <span
         ref="textElement"
-        class="textArea font-bruno text-3xl sm:text-4xl md:text-5xl text-violet-950 pt-10"
+        class="textArea font-bruno text-3xl sm:text-4xl md:text-5xl pt-[10px]"
         >{{ displayText }}<span class="cursor">|</span></span
       >
     </div>
@@ -61,9 +61,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .textDiv {
   position: relative;
-  padding-bottom: 100px;
 }
 
 .textArea {
