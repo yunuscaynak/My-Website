@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="{
-      'shadow-lg bg-gray-800': isScrolled,
+      'shadow-lg bg-[#0D197B]': isScrolled,
     }"
     class="fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-16 flex justify-between items-center transition-all duration-300"
   >
@@ -44,7 +44,7 @@
     <!-- Mobile Menu -->
     <div
       :class="{ 'translate-x-0': isMenuOpen, 'translate-x-full': !isMenuOpen }"
-      class="fixed top-0 right-0 w-3/4 h-full bg-gray-900 text-white flex flex-col items-center py-16 space-y-8 shadow-lg transition-transform duration-500 lg:hidden"
+      class="fixed top-0 right-0 w-3/4 h-full bg-[#0D197B] text-white flex flex-col items-center py-16 space-y-8 shadow-lg transition-transform duration-500 lg:hidden"
     >
       <RouterLink
         v-for="link in links"

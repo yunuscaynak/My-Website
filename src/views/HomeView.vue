@@ -4,6 +4,15 @@ import AboutSection from '@/components/AboutSection.vue';
 import MySkillsSection from '@/components/MySkillsSection.vue';
 import ContactSection from '@/components/ContactSection.vue';
 import FooterSection from '@/components/FooterSection.vue';
+
+useMeta({
+  title: 'Yunus Çaynak | Web Geliştirici ve Projelerim',
+  meta: [
+    { name: 'description', content: 'Yunus Caynak’ın web geliştirme, Vue.js projeleri ve yazılım becerileri hakkında bilgi alabileceğiniz kişisel web sitesi.' },
+    { name: 'keywords', content: 'Yunus Caynak, web geliştirici, Vue.js, yazılım, projeler' },
+    { name: 'robots', content: 'index, follow' }
+  ]
+});
 </script>
 
 <template>

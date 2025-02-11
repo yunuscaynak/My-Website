@@ -4,12 +4,12 @@
       Hi, my name is
     </h1>
     <p
-      class="font-bruno text-5xl sm:text-6xl md:text-7xl text-gray-300 pt-[100px] pb-10"
+      class="font-bruno text-5xl sm:text-6xl md:text-7xl text-gray-300 pt-[80px] pb-10"
     >
       Yunus.
     </p>
     <h3
-      class="font-bruno text-2xl sm:text-3xl md:text-4xl text-gray-300 pt-[120px] pb-14"
+      class="font-bruno text-2xl sm:text-3xl md:text-4xl text-gray-300 pt-[60px] pb-14"
     >
       _I'm a <b>Frontend</b> developer
     </h3>

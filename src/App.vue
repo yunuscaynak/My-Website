@@ -3,15 +3,15 @@ import { RouterLink, RouterView } from 'vue-router';
 import Navbar from './components/Navbar.vue';
 import VideoBackground from './components/VideoBackground.vue';
 
-import { onMounted, onBeforeUnmount } from 'vue';
+// import { onMounted, onBeforeUnmount } from 'vue';
 
-onMounted(() => {
-  // Mouse move eventi artık dinlenmeyecek
-});
+// onMounted(() => {
+//   // Mouse move eventi artık dinlenmeyecek
+// });
 
-onBeforeUnmount(() => {
-  // Mouse move event listener kaldırılacak
-});
+// onBeforeUnmount(() => {
+//   // Mouse move event listener kaldırılacak
+// });
 </script>
 
 <template>
