@@ -1,13 +1,12 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-import { createMetaManager } from 'vue-meta'
 import App from './App.vue'
 import router from './router'
 
-
 const app = createApp(App)
-app.use(createMetaManager())
+
+// Sadece router'ı kullanıyoruz, vue-meta kaldırıldı
 app.use(router)
 
 app.mount('#app')

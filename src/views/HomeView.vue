@@ -1,18 +1,26 @@
 <script setup>
+import { onMounted } from 'vue'
 import HomeSection from '@/components/HomeSection.vue';
 import AboutSection from '@/components/AboutSection.vue';
 import MySkillsSection from '@/components/MySkillsSection.vue';
 import ContactSection from '@/components/ContactSection.vue';
 import FooterSection from '@/components/FooterSection.vue';
 
-useMeta({
-  title: 'Yunus Çaynak | Web Geliştirici ve Projelerim',
-  meta: [
-    { name: 'description', content: 'Yunus Caynak’ın web geliştirme, Vue.js projeleri ve yazılım becerileri hakkında bilgi alabileceğiniz kişisel web sitesi.' },
-    { name: 'keywords', content: 'Yunus Caynak, web geliştirici, Vue.js, yazılım, projeler' },
-    { name: 'robots', content: 'index, follow' }
-  ]
-});
+onMounted(() => {
+  // Sayfa başlığını güncelle
+  document.title = 'Yunus Caynak'
+
+  // Meta etiketlerini güncelle
+  const descriptionMetaTag = document.querySelector('meta[name="description"]')
+  if (descriptionMetaTag) {
+    descriptionMetaTag.setAttribute('content', 'Yunus Caynak’ın web geliştirme projeleri hakkında bilgi.')
+  } else {
+    const newMetaTag = document.createElement('meta')
+    newMetaTag.setAttribute('name', 'description')
+    newMetaTag.setAttribute('content', 'Yunus Caynak’ın web geliştirme projeleri hakkında bilgi.')
+    document.head.appendChild(newMetaTag)
+  }
+})
 </script>
 
 <template>
@@ -33,6 +41,3 @@ useMeta({
   <!-- Footer Section -->
   <FooterSection />
 </template>
-
-
-
