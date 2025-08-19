@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted } from 'vue'
-import HomeSection from '@/components/HomeSection.vue';
 import AboutSection from '@/components/AboutSection.vue';
 import MySkillsSection from '@/components/MySkillsSection.vue';
 import ContactSection from '@/components/ContactSection.vue';
@@ -25,8 +24,7 @@ onMounted(() => {
 
 <template>
   <main class="px-6 sm:px-8 md:px-16">
-    <!-- Home Section -->
-    <HomeSection />
+    <!-- Home Section is rendered globally in App.vue via VideoBackground -->
 
     <!-- About Me Section -->
     <AboutSection />
