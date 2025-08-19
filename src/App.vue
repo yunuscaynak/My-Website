@@ -16,7 +16,6 @@ import VideoBackground from './components/VideoBackground.vue';
 
 <template>
   <div id="app">
-    <VideoBackground />
     <header>
       <div class="wrapper">
         <nav>
@@ -25,6 +24,7 @@ import VideoBackground from './components/VideoBackground.vue';
       </div>
     </header>
     <main>
+      <VideoBackground />
       <RouterView />
     </main>
   </div>

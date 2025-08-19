@@ -1,148 +1,833 @@
-<script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-import * as THREE from 'three';
-
-const canvasRef = ref(null);
-let scene, camera, renderer, plane, uniforms, animationFrameId;
-
-const initThree = () => {
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 2;
-
-  renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.domElement.style.position = 'absolute';
-  renderer.domElement.style.top = '0';
-  renderer.domElement.style.left = '0';
-  renderer.domElement.style.width = '100%';
-  renderer.domElement.style.height = '100%';
-  renderer.domElement.style.zIndex = '-1'; // Keeps it behind content
-
-  if (canvasRef.value) {
-    canvasRef.value.appendChild(renderer.domElement);
-  }
-
-  uniforms = {
-    u_time: { value: 0 },
-    u_scroll: { value: 0 },
-    u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-  };
-
-  const material = new THREE.ShaderMaterial({
-    uniforms,
-    vertexShader: `
-      varying vec2 vUv;
-      void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      precision highp float;
-      varying vec2 vUv;
-      uniform float u_time;
-      uniform float u_scroll;
-      uniform vec2 u_resolution;
-
-      // Noise function for texture effects
-      float rand(vec2 n) {
-          return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
-      }
-
-      void main() {
-          vec2 uv = (vUv - 0.5) * 2.0; // Normalize UV to range [-1, 1]
-          float dist = length(uv); // Calculate distance from the center
-
-          // Old Color transition logic
-          vec3 color1 = vec3(0.5804, 0.0, 1.0);  // Purple
-          vec3 color2 = vec3(0.0, 0.2, 0.8);  // Blue
-          vec3 color3 = vec3(0.0, 0.0, 0.0);  // Black
-
-          // Calculate dynamic color transition based on scroll
-          float wave = sin(uv.y * 10.0 - u_time * 2.0 + u_scroll * 1.5) * 0.5 + 0.5;
-          vec3 color = mix(color1, color2, wave);
-          color = mix(color, color3, wave * 0.5);
-
-          // Vignette effect and soft border
-          float vignette = smoothstep(0.7, 0.6, dist);
-
-          gl_FragColor = vec4(color * vignette, 1.0);
-      }
-    `,
-  });
-
-  const geometry = new THREE.PlaneGeometry(3.5, 3.5);
-  plane = new THREE.Mesh(geometry, material);
-  scene.add(plane);
-
-  animate();
-};
-
-const animate = () => {
-  animationFrameId = requestAnimationFrame(animate);
-  uniforms.u_time.value += 0.02; // Constant time progression
-
-  // Yatayda dönüş hareketi
-  plane.rotation.x = Math.sin(uniforms.u_time.value * 0.2) * 0.2;  // Yatay dönme (x ekseni)
-  plane.rotation.y = Math.cos(uniforms.u_time.value * 0.2) * 0.2;  // Dikey dönme (y ekseni)
-  
-  renderer.render(scene, camera);
-};
-
-const onResize = () => {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  uniforms.u_resolution.value.set(width, height);
-};
-
-const onScroll = () => {
-  uniforms.u_scroll.value = window.scrollY * 0.002; // Scroll ile animasyonu kontrol et
-
-  // Scroll ile büyüklük değişimi
-  const scale = 1 + window.scrollY * 0.0002;
-  plane.scale.set(scale, scale, 1); // Plane objesinin boyutunu değiştir
-};
-
-onMounted(() => {
-  initThree();
-  window.addEventListener('scroll', onScroll);
-  window.addEventListener('resize', onResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll);
-  window.removeEventListener('resize', onResize);
-
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
-  }
-
-  if (canvasRef.value && renderer.domElement) {
-    canvasRef.value.removeChild(renderer.domElement);
-  }
-
-  scene.remove(plane);
-  plane.geometry.dispose();
-  plane.material.dispose();
-  renderer.dispose();
-});
-</script>
-
 <template>
-  <div ref="canvasRef" class="fixed top-0 left-0 w-full h-full -z-10"></div>
+  <div class="skills-portfolio">
+    <div ref="container" class="skills-portfolio__canvas-container" @mouseleave="handleMouseLeave">
+      <canvas ref="canvas" class="skills-portfolio__canvas" />
+
+      <!-- Skills Header -->
+      <div class="skills-header px-15">
+        <div>
+          <p class="skills-description">Full‑Stack Developer · Vue / Nuxt · Node · MongoDB · Firebase · Three.js</p>
+        </div>
+        <div class="skills-tags">
+          <span class="skill-tag">Nuxt 3</span>
+          <span class="skill-tag">Tailwind</span>
+          <span class="skill-tag">JWT</span>
+          <span class="skill-tag">GraphQL</span>
+        </div>
+      </div>
+
+      <!-- About Me Section -->
+
+
+      <!-- Hover Tooltip -->
+      <div v-show="tooltip.visible" :style="tooltipStyle" class="skill-tooltip">
+        {{ tooltip.label }}
+      </div>
+
+      <!-- Controls Hint -->
+      <div class="controls-hint">
+        <div class="controls-hint__content">
+          drag to orbit · scroll to zoom · hover skills
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
+<script setup>
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+
+// Configuration constants
+const SCENE_CONFIG = {
+  camera: {
+    fov: 60,
+    near: 0.1,
+    far: 200,
+    position: { x: 0, y: 2.2, z: 9 }
+  },
+  controls: {
+    enableDamping: true,
+    dampingFactor: 0.06,
+    minDistance: 3,
+    maxDistance: 20,
+    autoRotate: true,
+    autoRotateSpeed: 0.5
+  },
+  lighting: {
+    ambient: { color: 0x3b82f6, intensity: 0.6 },
+    key: { color: 0x60a5fa, intensity: 1.4, position: [5, 8, 5] },
+    rim: { color: 0x8b5cf6, intensity: 0.8, position: [-6, -3, -4] },
+    accent: { color: 0xf59e0b, intensity: 0.4, position: [0, 10, 0] }
+  },
+  bloom: {
+    strength: 1.2,
+    radius: 1.0,
+    threshold: 0.3
+  },
+  stars: {
+    count: 2000,
+    radius: 60
+  },
+  fog: {
+    color: 0x0D197B,
+    density: 0.045
+  },
+  animations: {
+    coreRotationSpeed: 0.002,
+    ringPulseSpeed: 0.003,
+    planetBobbing: 0.1,
+    cameraFloat: 0.0005
+  }
+}
+
+const SKILLS_DATA = [
+  { label: 'Vue.js', color: 0x42b883, orbit: 2.2, size: 0.18, speed: 0.6, category: 'frontend', glowIntensity: 0.3 },
+  { label: 'Nuxt.js', color: 0x00dc82, orbit: 2.8, size: 0.18, speed: 0.5, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'Node.js', color: 0x8cc84b, orbit: 3.4, size: 0.2, speed: 0.45, category: 'backend', glowIntensity: 0.35 },
+  { label: 'Express', color: 0xffffff, orbit: 4.0, size: 0.16, speed: 0.42, category: 'backend', glowIntensity: 0.5 },
+  { label: 'MongoDB', color: 0x00ed64, orbit: 4.6, size: 0.2, speed: 0.38, category: 'database', glowIntensity: 0.3 },
+  { label: 'Firebase', color: 0xffca28, orbit: 5.2, size: 0.18, speed: 0.36, category: 'cloud', glowIntensity: 0.4 },
+  { label: 'Tailwind', color: 0x38bdf8, orbit: 5.8, size: 0.18, speed: 0.34, category: 'styling', glowIntensity: 0.45 },
+  { label: 'Three.js', color: 0xffffff, orbit: 6.4, size: 0.2, speed: 0.32, category: '3d', glowIntensity: 0.6 },
+  { label: 'Python', color: 0x3671a5, orbit: 7.0, size: 0.18, speed: 0.30, category: 'language', glowIntensity: 0.25 },
+  { label: 'SQL', color: 0xb0b0ff, orbit: 7.6, size: 0.16, speed: 0.28, category: 'database', glowIntensity: 0.3 }
+]
+
+// Reactive references
+const container = ref(null)
+const canvas = ref(null)
+const tooltip = ref({ visible: false, label: '', x: 0, y: 0 })
+
+// Computed properties
+const tooltipStyle = computed(() => ({
+  left: `${tooltip.value.x}px`,
+  top: `${tooltip.value.y}px`
+}))
+
+// Three.js scene objects
+let threeScene = null
+
+class ThreeScene {
+  constructor() {
+    this.renderer = null
+    this.scene = null
+    this.camera = null
+    this.controls = null
+    this.composer = null
+    this.bloomPass = null
+    this.planets = []
+    this.raycaster = new THREE.Raycaster()
+    this.mouse = new THREE.Vector2(-1, -1)
+    this.frameId = null
+    this.resizeObserver = null
+    this.animationTime = 0
+    this.centralCore = null
+    this.orbitRings = []
+    this.floatingParticles = []
+  }
+
+  init(canvasElement, containerElement) {
+    const { clientWidth: width, clientHeight: height } = containerElement
+
+    this.setupRenderer(canvasElement, width, height)
+    this.setupScene()
+    this.setupCamera(width, height)
+    this.setupControls()
+    this.setupPostprocessing(width, height)
+    this.setupLighting()
+    this.createSceneObjects()
+    this.setupEventListeners()
+
+    return this
+  }
+
+  setupRenderer(canvasElement, width, height) {
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: canvasElement,
+      antialias: true,
+      alpha: true
+    })
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    this.renderer.setSize(width, height)
+    this.renderer.outputEncoding = THREE.sRGBEncoding
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMappingExposure = 1.1
+  }
+
+  setupScene() {
+    this.scene = new THREE.Scene()
+    this.scene.fog = new THREE.FogExp2(
+      SCENE_CONFIG.fog.color,
+      SCENE_CONFIG.fog.density
+    )
+  }
+
+  setupCamera(width, height) {
+    const { fov, near, far, position } = SCENE_CONFIG.camera
+    this.camera = new THREE.PerspectiveCamera(fov, width / height, near, far)
+    this.camera.position.set(position.x, position.y, position.z)
+  }
+
+  setupControls() {
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    Object.assign(this.controls, SCENE_CONFIG.controls)
+  }
+
+  setupPostprocessing(width, height) {
+    this.composer = new EffectComposer(this.renderer)
+    this.composer.addPass(new RenderPass(this.scene, this.camera))
+
+    this.bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(width, height),
+      SCENE_CONFIG.bloom.strength,
+      SCENE_CONFIG.bloom.radius,
+      SCENE_CONFIG.bloom.threshold
+    )
+    this.composer.addPass(this.bloomPass)
+  }
+
+  setupLighting() {
+    const { ambient, key, rim, accent } = SCENE_CONFIG.lighting
+
+    // Ambient light with blue tint
+    const ambientLight = new THREE.AmbientLight(ambient.color, ambient.intensity)
+    this.scene.add(ambientLight)
+
+    // Key light with blue tone
+    const keyLight = new THREE.DirectionalLight(key.color, key.intensity)
+    keyLight.position.set(...key.position)
+    keyLight.castShadow = true
+    this.scene.add(keyLight)
+
+    // Rim light with purple tone
+    const rimLight = new THREE.DirectionalLight(rim.color, rim.intensity)
+    rimLight.position.set(...rim.position)
+    this.scene.add(rimLight)
+
+    // Accent light from above
+    const accentLight = new THREE.DirectionalLight(accent.color, accent.intensity)
+    accentLight.position.set(...accent.position)
+    this.scene.add(accentLight)
+  }
+
+  createSceneObjects() {
+    // Stars background with different colors
+    this.scene.add(this.createStarField())
+
+    // Floating particles
+    this.scene.add(this.createFloatingParticles())
+
+    // Central core with animations
+    this.centralCore = this.createCentralCore()
+    this.scene.add(this.centralCore)
+
+    // Energy waves around core
+    this.scene.add(this.createEnergyWaves())
+
+    // Skill orbits and planets
+    this.createSkillsVisualization()
+  }
+
+  createStarField() {
+    const { count, radius } = SCENE_CONFIG.stars
+    const geometry = new THREE.BufferGeometry()
+    const positions = new Float32Array(count * 3)
+    const colors = new Float32Array(count * 3)
+
+    // Star colors array
+    const starColors = [
+      new THREE.Color(0x60a5fa), // Blue
+      new THREE.Color(0x8b5cf6), // Purple
+      new THREE.Color(0xfbbf24), // Yellow
+      new THREE.Color(0xffffff), // White
+      new THREE.Color(0x3b82f6)  // Deep blue
+    ]
+
+    for (let i = 0; i < count; i++) {
+      const r = radius * (0.4 + Math.random() * 0.6)
+      const theta = Math.random() * Math.PI * 2
+      const phi = Math.acos(2 * Math.random() - 1)
+
+      const index = i * 3
+      positions[index] = r * Math.sin(phi) * Math.cos(theta)
+      positions[index + 1] = r * Math.sin(phi) * Math.sin(theta)
+      positions[index + 2] = r * Math.cos(phi)
+
+      // Random star color
+      const color = starColors[Math.floor(Math.random() * starColors.length)]
+      colors[index] = color.r
+      colors[index + 1] = color.g
+      colors[index + 2] = color.b
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+
+    const material = new THREE.PointsMaterial({
+      size: 0.05,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending
+    })
+
+    return new THREE.Points(geometry, material)
+  }
+
+  createCentralCore() {
+    const geometry = new THREE.IcosahedronGeometry(1.1, 2)
+    const material = new THREE.MeshPhysicalMaterial({
+      metalness: 0.8,
+      roughness: 0.1,
+      clearcoat: 1,
+      clearcoatRoughness: 0.05,
+      emissive: new THREE.Color(0x3b82f6),
+      emissiveIntensity: 0.6,
+      color: 0x60a5fa,
+      transparent: true,
+      opacity: 0.9
+    })
+
+    const core = new THREE.Mesh(geometry, material)
+    core.rotation.y = Math.PI * 0.25
+    return core
+  }
+
+  createFloatingParticles() {
+    const particleCount = 300
+    const geometry = new THREE.BufferGeometry()
+    const positions = new Float32Array(particleCount * 3)
+    const colors = new Float32Array(particleCount * 3)
+
+    const particleColors = [
+      new THREE.Color(0x3b82f6),
+      new THREE.Color(0x8b5cf6),
+      new THREE.Color(0x06b6d4)
+    ]
+
+    for (let i = 0; i < particleCount; i++) {
+      const radius = 15 + Math.random() * 20
+      const theta = Math.random() * Math.PI * 2
+      const phi = Math.random() * Math.PI
+
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 10
+      positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta)
+
+      const color = particleColors[Math.floor(Math.random() * particleColors.length)]
+      colors[i * 3] = color.r
+      colors[i * 3 + 1] = color.g
+      colors[i * 3 + 2] = color.b
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+
+    const material = new THREE.PointsMaterial({
+      size: 0.08,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending
+    })
+
+    const particles = new THREE.Points(geometry, material)
+    this.floatingParticles = particles
+    return particles
+  }
+
+  createEnergyWaves() {
+    const group = new THREE.Group()
+
+    for (let i = 0; i < 3; i++) {
+      const geometry = new THREE.RingGeometry(0.5 + i * 0.3, 0.6 + i * 0.3, 32)
+      const material = new THREE.MeshBasicMaterial({
+        color: i === 0 ? 0x3b82f6 : i === 1 ? 0x8b5cf6 : 0x06b6d4,
+        transparent: true,
+        opacity: 0.3,
+        side: THREE.DoubleSide
+      })
+
+      const ring = new THREE.Mesh(geometry, material)
+      ring.rotation.x = Math.PI / 2
+      ring.userData = {
+        originalScale: 1,
+        phase: i * Math.PI * 0.66,
+        speed: 0.02 + i * 0.01
+      }
+      group.add(ring)
+    }
+
+    return group
+  }
+
+  createSkillsVisualization() {
+    // Create animated orbit rings
+    SKILLS_DATA.forEach((skill, index) => {
+      const ringGeometry = new THREE.TorusGeometry(skill.orbit, 0.015, 8, 128)
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        color: skill.color,
+        transparent: true,
+        opacity: 0.3,
+        emissive: new THREE.Color(skill.color),
+        emissiveIntensity: 0.1
+      })
+
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial)
+      ring.rotation.x = Math.PI / 2
+      ring.userData = {
+        originalOpacity: 0.3,
+        phase: index * 0.5,
+        pulseSpeed: 0.005 + Math.random() * 0.003
+      }
+
+      this.orbitRings.push(ring)
+      this.scene.add(ring)
+    })
+
+    // Create skill planets with enhanced materials and animations
+    const planetGeometry = new THREE.SphereGeometry(1, 32, 32)
+
+    SKILLS_DATA.forEach((skill, index) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: skill.color,
+        roughness: 0.2,
+        metalness: 0.4,
+        emissive: new THREE.Color(skill.color),
+        emissiveIntensity: skill.glowIntensity || 0.3
+      })
+
+      const mesh = new THREE.Mesh(planetGeometry, material)
+      mesh.scale.setScalar(skill.size)
+      mesh.userData = {
+        label: skill.label,
+        orbit: skill.orbit,
+        speed: skill.speed,
+        phase: (index / SKILLS_DATA.length) * Math.PI * 2,
+        originalSize: skill.size,
+        category: skill.category,
+        bobbingPhase: Math.random() * Math.PI * 2,
+        rotationSpeed: 0.01 + Math.random() * 0.02
+      }
+
+      this.scene.add(mesh)
+
+      const label = this.createTextSprite(skill.label)
+      this.scene.add(label)
+
+      this.planets.push({ mesh, label })
+    })
+  }
+
+  createTextSprite(text) {
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    const padding = 24
+    const fontSize = 42
+
+    context.font = `bold ${fontSize}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`
+    const textWidth = context.measureText(text).width
+
+    canvas.width = textWidth + padding * 2
+    canvas.height = fontSize + padding
+
+    // Redraw font after canvas resize
+    context.font = `bold ${fontSize}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`
+
+    // Background with rounded corners
+    this.drawRoundedRect(context, 0, 0, canvas.width, canvas.height, 16)
+    context.fillStyle = 'rgba(0, 0, 0, 0.55)'
+    context.fill()
+
+    // Text
+    context.fillStyle = '#ffffff'
+    context.textBaseline = 'middle'
+    context.fillText(text, padding, canvas.height / 2)
+
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.needsUpdate = true
+
+    const material = new THREE.SpriteMaterial({
+      map: texture,
+      depthWrite: false,
+      transparent: true
+    })
+
+    const sprite = new THREE.Sprite(material)
+    const scale = 0.6
+    sprite.scale.set((canvas.width / canvas.height) * scale, scale, 1)
+    sprite.userData = { isLabel: true }
+
+    return sprite
+  }
+
+  drawRoundedRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath()
+    ctx.moveTo(x + radius, y)
+    ctx.arcTo(x + width, y, x + width, y + height, radius)
+    ctx.arcTo(x + width, y + height, x, y + height, radius)
+    ctx.arcTo(x, y + height, x, y, radius)
+    ctx.arcTo(x, y, x + width, y, radius)
+    ctx.closePath()
+  }
+
+  setupEventListeners() {
+    this.handleMouseMove = this.handleMouseMove.bind(this)
+    this.handleResize = this.handleResize.bind(this)
+
+    window.addEventListener('mousemove', this.handleMouseMove)
+    window.addEventListener('resize', this.handleResize)
+
+    if (container.value) {
+      this.resizeObserver = new ResizeObserver(this.handleResize)
+      this.resizeObserver.observe(container.value)
+    }
+  }
+
+  handleMouseMove(event) {
+    if (!this.renderer) return
+
+    const rect = this.renderer.domElement.getBoundingClientRect()
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+    tooltip.value.x = event.clientX + 12
+    tooltip.value.y = event.clientY + 12
+  }
+
+  handleMouseLeave() {
+    this.mouse.set(-1, -1)
+    tooltip.value.visible = false
+    this.resetPlanetScales()
+  }
+
+  handleResize() {
+    if (!container.value || !this.camera || !this.renderer) return
+
+    const { clientWidth: width, clientHeight: height } = container.value
+
+    this.camera.aspect = width / height
+    this.camera.updateProjectionMatrix()
+    this.renderer.setSize(width, height)
+    this.composer.setSize(width, height)
+    this.bloomPass.setSize(width, height)
+  }
+
+  animate(time = 0) {
+    this.animationTime = time * 0.001
+    const { coreRotationSpeed, ringPulseSpeed, planetBobbing, cameraFloat } = SCENE_CONFIG.animations
+
+    // Animate central core
+    if (this.centralCore) {
+      this.centralCore.rotation.x = this.animationTime * coreRotationSpeed * 0.7
+      this.centralCore.rotation.y = this.animationTime * coreRotationSpeed
+      this.centralCore.rotation.z = this.animationTime * coreRotationSpeed * 0.5
+
+      // Core pulsing effect
+      const pulse = 1 + Math.sin(this.animationTime * 3) * 0.05
+      this.centralCore.scale.setScalar(pulse)
+    }
+
+    // Animate orbit rings
+    this.orbitRings.forEach((ring, index) => {
+      const { phase, pulseSpeed } = ring.userData
+      const opacity = ring.userData.originalOpacity + Math.sin(this.animationTime * 2 + phase) * 0.15
+      ring.material.opacity = Math.max(0.1, opacity)
+
+      // Ring rotation
+      ring.rotation.z = this.animationTime * pulseSpeed
+    })
+
+    // Animate floating particles
+    if (this.floatingParticles) {
+      const positions = this.floatingParticles.geometry.attributes.position.array
+      const originalPositions = this.floatingParticles.userData.originalPositions || positions.slice()
+
+      if (!this.floatingParticles.userData.originalPositions) {
+        this.floatingParticles.userData.originalPositions = originalPositions
+      }
+
+      for (let i = 0; i < positions.length; i += 3) {
+        positions[i + 1] = originalPositions[i + 1] + Math.sin(this.animationTime * 0.5 + i * 0.01) * 2
+      }
+      this.floatingParticles.geometry.attributes.position.needsUpdate = true
+    }
+
+    // Animate energy waves around core
+    this.scene.children.forEach(child => {
+      if (child.type === 'Group' && child.children.length > 0) {
+        child.children.forEach((ring, index) => {
+          if (ring.userData.speed) {
+            const scale = 1 + Math.sin(this.animationTime * ring.userData.speed + ring.userData.phase) * 0.3
+            ring.scale.setScalar(scale)
+            ring.material.opacity = 0.2 + Math.sin(this.animationTime * ring.userData.speed + ring.userData.phase) * 0.1
+          }
+        })
+      }
+    })
+
+    // Enhanced planet animations
+    this.planets.forEach(({ mesh, label }, index) => {
+      const { orbit, speed, phase, bobbingPhase, rotationSpeed } = mesh.userData
+      const angle = this.animationTime * speed + phase
+      const x = Math.cos(angle) * orbit
+      const z = Math.sin(angle) * orbit
+
+      // Add vertical bobbing motion
+      const bobbing = Math.sin(this.animationTime * 2 + bobbingPhase) * planetBobbing
+      const y = bobbing
+
+      mesh.position.set(x, y, z)
+      label.position.set(x, y + 0.35, z)
+      label.lookAt(this.camera.position)
+
+      // Rotate each planet
+      mesh.rotation.y += rotationSpeed
+      mesh.rotation.x += rotationSpeed * 0.5
+    })
+
+    // Subtle camera floating animation
+    if (!this.controls.autoRotate) {
+      const cameraY = this.camera.position.y + Math.sin(this.animationTime * cameraFloat) * 0.1
+      this.camera.position.y = cameraY
+    }
+
+    this.controls.update()
+    this.updateHoverInteraction()
+    this.composer.render()
+
+    this.frameId = requestAnimationFrame(this.animate.bind(this))
+  }
+
+  updateHoverInteraction() {
+    if (this.mouse.x === -1) return
+
+    this.raycaster.setFromCamera(this.mouse, this.camera)
+    const intersects = this.raycaster.intersectObjects(
+      this.planets.map(p => p.mesh),
+      false
+    )
+
+    if (intersects.length > 0) {
+      const intersectedObject = intersects[0].object
+      const { label, originalSize } = intersectedObject.userData
+
+      if (!intersectedObject.userData.isHovered) {
+        // Enhanced hover effect with glow
+        intersectedObject.scale.setScalar(originalSize * 1.25)
+        intersectedObject.material.emissiveIntensity *= 1.5
+        intersectedObject.userData.isHovered = true
+
+        // Animate the corresponding ring
+        const correspondingRing = this.orbitRings.find(ring =>
+          Math.abs(ring.geometry.parameters.innerRadius - intersectedObject.userData.orbit) < 0.1
+        )
+        if (correspondingRing) {
+          correspondingRing.material.opacity = 0.8
+        }
+      }
+
+      tooltip.value.visible = true
+      tooltip.value.label = label
+    } else {
+      this.resetPlanetScales()
+      tooltip.value.visible = false
+    }
+  }
+
+  resetPlanetScales() {
+    this.planets.forEach(({ mesh }) => {
+      const { originalSize } = mesh.userData
+      mesh.scale.setScalar(originalSize)
+      mesh.userData.isHovered = false
+    })
+  }
+
+  dispose() {
+    if (this.frameId) {
+      cancelAnimationFrame(this.frameId)
+    }
+
+    window.removeEventListener('mousemove', this.handleMouseMove)
+    window.removeEventListener('resize', this.handleResize)
+
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect()
+    }
+
+    if (this.controls) {
+      this.controls.dispose()
+    }
+
+    if (this.composer) {
+      this.composer.dispose()
+    }
+
+    if (this.renderer) {
+      this.renderer.dispose()
+    }
+
+    // Clean up geometries and materials
+    this.scene?.traverse((object) => {
+      if (object.geometry) {
+        object.geometry.dispose()
+      }
+      if (object.material) {
+        if (Array.isArray(object.material)) {
+          object.material.forEach(material => material.dispose())
+        } else {
+          object.material.dispose()
+        }
+      }
+    })
+  }
+}
+
+// Component lifecycle
+onMounted(async () => {
+  await nextTick()
+
+  if (canvas.value && container.value) {
+    threeScene = new ThreeScene()
+    threeScene.init(canvas.value, container.value)
+    threeScene.animate()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (threeScene) {
+    threeScene.dispose()
+  }
+})
+
+// Event handlers
+const handleMouseLeave = () => {
+  if (threeScene) {
+    threeScene.handleMouseLeave()
+  }
+}
+</script>
+
 <style scoped>
-body, html {
-  margin: 0;
-  padding: 0;
+.skills-portfolio {
+  position: relative;
+  width: 100%;
+  height: 90vh; /* 80vh yerine 100vh yapın */
+  margin-top: 48px; /* margin-top'ı kaldırın */
+  scroll-margin-top: 0; /* scroll-margin-top'ı kaldırın */
+  border-radius: 0; /* border-radius'u kaldırın */
+  overflow: hidden;
+  background: linear-gradient(to bottom, #0D197B, #1e1b4b, #000000);
+}
+
+.skills-portfolio__canvas-container {
+  top: 0;
+  min-height: 100%;
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+}
+
+.skills-portfolio__canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Skills Header */
+.skills-header {
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.skills-description {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .skills-description {
+    font-size: 1rem;
+  }
+}
+
+.skills-tags {
+  display: none;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .skills-tags {
+    display: flex;
+  }
+}
+
+.skill-tag {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+/* Tooltip */
+.skill-tooltip {
+  pointer-events: none;
+  position: absolute;
+  z-index: 20;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Controls Hint */
+.controls-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.controls-hint__content {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.625rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .controls-hint__content {
+    font-size: 0.75rem;
+  }
+}
+
+:global(body) {
+  background-color: #0b0f17;
 }
 </style>

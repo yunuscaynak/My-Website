@@ -24,7 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="px-6 sm:px-8 md:px-16 py-8">
+  <main class="px-6 sm:px-8 md:px-16">
     <!-- Home Section -->
     <HomeSection />
 
