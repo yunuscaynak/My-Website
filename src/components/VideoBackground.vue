@@ -1,5 +1,5 @@
 <template>
-  <div class="skills-portfolio">
+  <div id="home" class="skills-portfolio">
     <div ref="container" class="skills-portfolio__canvas-container" @mouseleave="handleMouseLeave">
       <canvas ref="canvas" class="skills-portfolio__canvas" />
 
@@ -16,8 +16,19 @@
         </div>
       </div>
 
-      <!-- About Me Section -->
-
+      <!-- Hero Section (merged from HomeSection.vue) -->
+      <div class="hero-overlay">
+        <div class="hero-card">
+          <h1 class="hero-kicker font-bruno">Hi, my name is</h1>
+          <p class="hero-title font-bruno">Yunus.</p>
+          <h3 class="hero-sub font-bruno">I'm a <b>Frontend</b> developer</h3>
+          <div class="typing">
+            <span class="textArea font-bruno">
+              {{ displayText }}<span class="cursor">|</span>
+            </span>
+          </div>
+        </div>
+      </div>
 
       <!-- Hover Tooltip -->
       <div v-show="tooltip.visible" :style="tooltipStyle" class="skill-tooltip">
@@ -102,6 +113,36 @@ const SKILLS_DATA = [
 const container = ref(null)
 const canvas = ref(null)
 const tooltip = ref({ visible: false, label: '', x: 0, y: 0 })
+
+// Hero typed text (from HomeSection.vue)
+const typedText = 'I build things for the web'
+const displayText = ref('')
+
+const typeText = () => {
+  let index = 0
+  const typeInterval = setInterval(() => {
+    if (index < typedText.length) {
+      displayText.value += typedText[index]
+      index++
+    } else {
+      clearInterval(typeInterval)
+      setTimeout(deleteText, 5000)
+    }
+  }, 100)
+}
+
+const deleteText = () => {
+  let index = displayText.value.length
+  const deleteInterval = setInterval(() => {
+    if (index > 0) {
+      displayText.value = displayText.value.slice(0, index - 1)
+      index--
+    } else {
+      clearInterval(deleteInterval)
+      setTimeout(typeText, 2000)
+    }
+  }, 50)
+}
 
 // Computed properties
 const tooltipStyle = computed(() => ({
@@ -697,6 +738,7 @@ onMounted(async () => {
     threeScene.init(canvas.value, container.value)
     threeScene.animate()
   }
+  typeText()
 })
 
 onBeforeUnmount(() => {
@@ -829,5 +871,72 @@ const handleMouseLeave = () => {
 
 :global(body) {
   background-color: #0b0f17;
+}
+
+/* Hero overlay (from HomeSection) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: flex-end; /* bottom */
+  justify-content: flex-end; /* right */
+  pointer-events: none; /* avoid blocking orbit controls */
+  padding-left: clamp(0.5rem, 2vw, 1.25rem);
+  padding-right: clamp(0.5rem, 2vw, 1.25rem);
+  padding-bottom: clamp(0.25rem, 1.2vw, 0.75rem); /* slightly closer to bottom */
+}
+
+.hero-card {
+  pointer-events: auto;
+  max-width: 780px;
+  background: linear-gradient(135deg, rgba(13,25,123,0.25), rgba(0,0,0,0.15));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 3.5vw, 2.5rem);
+}
+
+.hero-kicker {
+  margin: 0;
+  color: rgba(255,255,255,0.8);
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+}
+
+.hero-title {
+  margin: 0.25rem 0 0.5rem 0;
+  color: #e5e7eb;
+  font-size: clamp(1.9rem, 5vw, 3.6rem);
+  line-height: 1.05;
+}
+
+.hero-sub {
+  margin: 0 0 0.75rem 0;
+  color: #cbd5e1;
+  font-size: clamp(1.1rem, 2.1vw, 1.7rem);
+  font-weight: 400;
+}
+
+.typing {
+  margin-top: 0.5rem;
+}
+
+.textArea {
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.cursor {
+  color: white;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 </style>
