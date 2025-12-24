@@ -6,7 +6,9 @@
       <!-- Skills Header -->
       <div class="skills-header px-15">
         <div>
-          <p class="skills-description">Full‑Stack Developer · Vue / Nuxt · Node · MongoDB · Firebase · Three.js</p>
+          <p class="skills-description">
+            Future-ready developer · Vue/Nuxt · Node · MongoDB · Firebase · Three.js
+          </p>
         </div>
         <div class="skills-tags">
           <span class="skill-tag">Nuxt 3</span>
@@ -16,19 +18,21 @@
         </div>
       </div>
 
-      <!-- Hero Section (merged from HomeSection.vue) -->
+      <!-- Hero Section -->
       <div class="hero-overlay">
         <div class="hero-card">
-          <h1 class="hero-kicker font-bruno">Hi, my name is</h1>
-          <p class="hero-title font-bruno">Yunus.</p>
-          <h3 class="hero-sub font-bruno">I'm a <b>Frontend</b> developer</h3>
           <div class="typing">
             <span class="textArea font-bruno">
               {{ displayText }}<span class="cursor">|</span>
             </span>
           </div>
+          <div class="hero-cta">
+            <a href="#contact" class="ctaPrimary">Start a project</a>
+            <a href="#mySkills" class="ctaGhost">View skill stack</a>
+          </div>
         </div>
       </div>
+
 
       <!-- Hover Tooltip -->
       <div v-show="tooltip.visible" :style="tooltipStyle" class="skill-tooltip">
@@ -115,7 +119,7 @@ const canvas = ref(null)
 const tooltip = ref({ visible: false, label: '', x: 0, y: 0 })
 
 // Hero typed text (from HomeSection.vue)
-const typedText = 'I build things for the web'
+const typedText = 'Performance-obsessed.'
 const displayText = ref('')
 
 const typeText = () => {
@@ -759,12 +763,14 @@ const handleMouseLeave = () => {
 .skills-portfolio {
   position: relative;
   width: 100%;
-  height: 90vh; /* 80vh yerine 100vh yapın */
-  margin-top: 48px; /* margin-top'ı kaldırın */
-  scroll-margin-top: 0; /* scroll-margin-top'ı kaldırın */
-  border-radius: 0; /* border-radius'u kaldırın */
+  height: 90vh;
+  margin-top: 64px;
+  scroll-margin-top: 0;
+  border-radius: 0;
   overflow: hidden;
-  background: linear-gradient(to bottom, #0D197B, #1e1b4b, #000000);
+  background: radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.15), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(99, 102, 241, 0.18), transparent 40%),
+    linear-gradient(to bottom, #0b0f1f, #0c1022, #05060a);
 }
 
 .skills-portfolio__canvas-container {
@@ -879,59 +885,90 @@ const handleMouseLeave = () => {
   inset: 0;
   z-index: 5;
   display: flex;
-  align-items: flex-end; /* bottom */
-  justify-content: flex-end; /* right */
-  pointer-events: none; /* avoid blocking orbit controls */
-  padding-left: clamp(0.5rem, 2vw, 1.25rem);
-  padding-right: clamp(0.5rem, 2vw, 1.25rem);
-  padding-bottom: clamp(0.25rem, 1.2vw, 0.75rem); /* slightly closer to bottom */
+  align-items: flex-end;
+  justify-content: flex-end;
+  pointer-events: none;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
 }
 
 .hero-card {
   pointer-events: auto;
-  max-width: 780px;
-  background: linear-gradient(135deg, rgba(13,25,123,0.25), rgba(0,0,0,0.15));
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 3.5vw, 2.5rem);
-}
-
-.hero-kicker {
-  margin: 0;
-  color: rgba(255,255,255,0.8);
-  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
-}
-
-.hero-title {
-  margin: 0.25rem 0 0.5rem 0;
-  color: #e5e7eb;
-  font-size: clamp(1.9rem, 5vw, 3.6rem);
-  line-height: 1.05;
-}
-
-.hero-sub {
-  margin: 0 0 0.75rem 0;
-  color: #cbd5e1;
-  font-size: clamp(1.1rem, 2.1vw, 1.7rem);
-  font-weight: 400;
+  width: min(90vw, 460px);
+  background: rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(4px);
+  border-radius: 18px;
+  padding: clamp(0.75rem, 1.8vw, 1.15rem);
 }
 
 .typing {
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 .textArea {
-  color: #fff;
+  color: #c0f4ff;
   font-weight: 700;
-  font-size: clamp(1.05rem, 2.4vw, 1.7rem);
+  font-size: clamp(1rem, 1.8vw, 1.45rem);
+  line-height: 1.35;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .cursor {
-  color: white;
+  color: #c0f4ff;
   animation: blink 0.7s infinite;
+}
+
+.hero-cta {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #22d3ee, #a855f7);
+  color: white;
+  font-family: 'Bruno Ace SC', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 28px rgba(168, 85, 247, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.ctaPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 38px rgba(168, 85, 247, 0.35);
+  filter: brightness(1.05);
+}
+
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Bruno Ace SC', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.06);
+  transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ctaGhost:hover {
+  transform: translateY(-2px);
+  border-color: #22d3ee;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 @keyframes blink {

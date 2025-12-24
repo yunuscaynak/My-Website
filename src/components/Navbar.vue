@@ -1,58 +1,41 @@
 <template>
   <nav
-    :class="{
-      'backdrop-blur-md bg-[#0D197B]/30': isScrolled,
-      'bg-transparent': !isScrolled
-    }"
-    class="fixed top-0 left-0 w-full z-50 px-6 py-4 md:px-16 flex justify-between items-center transition-all duration-300 border-b border-white/10"
+    class="navShell"
+    :class="{ 'navScrolled': isScrolled }"
   >
-    <!-- Logo -->
-    <div class="text-white text-2xl font-bold">
-      <a href="/" class="font-bruno hover:text-blue-400 transition-colors duration-300">Y.</a>
+    <div class="brand">
+      <a href="/" class="brandMark">Y.</a>
+      <span class="brandHint">Portfolio</span>
     </div>
 
-    <!-- Desktop Navigation Links -->
-    <div class="hidden lg:flex space-x-6 text-white">
+    <div class="desktopLinks">
       <RouterLink
         v-for="link in links"
         :key="link.to"
         :to="link.to"
-        class="font-bruno text-lg hover:text-blue-400 transition-all duration-300 relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+        class="navLink"
+        active-class="navLinkActive"
       >
+        <span class="dot"></span>
         {{ link.text }}
       </RouterLink>
     </div>
 
-    <!-- Hamburger Menu Button -->
-    <button
-      @click="toggleMenu"
-      class="hamburger-btn text-white focus:outline-none relative z-50 lg:hidden"
-    >
-      <div
-        :class="{ 'rotate-45 translate-y-2': isMenuOpen }"
-        class="w-8 h-0.5 bg-white mb-2 transition-all duration-300"
-      ></div>
-      <div
-        :class="{ 'opacity-0': isMenuOpen }"
-        class="w-8 h-0.5 bg-white mb-2 transition-opacity duration-300"
-      ></div>
-      <div
-        :class="{ '-rotate-45 -translate-y-2': isMenuOpen }"
-        class="w-8 h-0.5 bg-white transition-all duration-300"
-      ></div>
+    <button @click="toggleMenu" class="menuButton lg:hidden" aria-label="Toggle menu">
+      <span :class="{ open: isMenuOpen }" class="menuIcon"></span>
     </button>
 
-    <!-- Mobile Menu -->
     <div
-      :class="{ 'translate-x-0': isMenuOpen, 'translate-x-full': !isMenuOpen }"
-      class="fixed top-0 right-0 w-3/4 h-full bg-[#0D197B]/90 backdrop-blur-lg text-white flex flex-col items-center py-16 space-y-8 shadow-lg transition-transform duration-500 lg:hidden border-l border-white/10"
+      class="mobilePanel"
+      :class="{ open: isMenuOpen }"
     >
       <RouterLink
         v-for="link in links"
         :key="link.to"
         @click="closeMenu"
         :to="link.to"
-        class="font-bruno text-xl hover:text-blue-400 transition-colors duration-300"
+        class="mobileLink"
+        active-class="navLinkActive"
       >
         {{ link.text }}
       </RouterLink>
@@ -102,22 +85,137 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-nav {
-  backdrop-filter: blur(4px);
-  background: rgba(13, 25, 123, 0.1);
+.navShell {
+  @apply fixed top-0 left-0 z-50 flex w-full items-center justify-between px-6 py-4 md:px-12 transition-all duration-300;
+  background: linear-gradient(120deg, rgba(34, 211, 238, 0.15), rgba(99, 102, 241, 0.15));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
 }
 
-.router-link-active {
-  color: #ffffff;
+.navScrolled {
+  @apply shadow-lg shadow-purple-500/10;
+  background: linear-gradient(120deg, rgba(34, 211, 238, 0.3), rgba(99, 102, 241, 0.3));
 }
 
-/* Fix for mobile Safari backdrop-filter */
-@supports not (backdrop-filter: blur(4px)) {
-  nav {
-    background: rgba(13, 25, 123, 0.9);
-  }
-  .fixed.top-0.right-0 {
-    background: rgba(13, 25, 123, 0.95);
-  }
+.brand {
+  @apply flex items-center gap-2 text-white;
+}
+
+.brandMark {
+  @apply text-2xl font-bruno text-white transition duration-300 hover:text-cyan-300;
+}
+
+.brandHint {
+  @apply text-xs uppercase tracking-[0.2em] text-white/60 hidden sm:inline;
+}
+
+.desktopLinks {
+  @apply hidden items-center gap-5 lg:flex;
+}
+
+.navLink {
+  @apply relative flex items-center gap-2 font-bruno text-sm text-white/80 uppercase tracking-wide transition duration-300 hover:text-white;
+  padding-bottom: 6px;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #22d3ee, #6366f1);
+  border-radius: 9999px;
+  opacity: 0;
+  transition: width 200ms ease, opacity 200ms ease;
+}
+
+.navLink:hover::after,
+.navLinkActive::after {
+  width: 100%;
+  opacity: 1;
+}
+
+.navLink .dot {
+  @apply h-1 w-1 rounded-full bg-white/40 transition duration-300;
+}
+
+.navLinkActive {
+  @apply text-white;
+}
+
+.navLinkActive .dot {
+  @apply bg-cyan-300 w-2;
+}
+
+.menuButton {
+  @apply relative h-10 w-10 rounded-full border border-white/20 bg-white/5 p-2 text-white shadow-md shadow-cyan-400/20 transition duration-300 hover:-translate-y-0.5 hover:border-cyan-200/60 hover:bg-white/10;
+}
+
+.menuIcon,
+.menuIcon::before,
+.menuIcon::after {
+  @apply absolute left-1/2 h-0.5 w-6 -translate-x-1/2 bg-white transition-all duration-300;
+  content: '';
+}
+
+.menuIcon {
+  @apply top-1/2 -translate-y-1/2;
+}
+
+.menuIcon::before {
+  @apply -top-2;
+}
+
+.menuIcon::after {
+  @apply top-2;
+}
+
+.menuIcon.open {
+  @apply bg-transparent;
+}
+
+.menuIcon.open::before {
+  @apply top-0 rotate-45;
+}
+
+.menuIcon.open::after {
+  @apply top-0 -rotate-45;
+}
+
+.mobilePanel {
+  @apply fixed top-0 right-0 flex h-full w-3/4 translate-x-full flex-col items-center gap-6 bg-gradient-to-b from-[#0b1228]/95 via-[#111d3b]/95 to-[#0b1228]/95 px-8 py-16 text-white shadow-2xl transition-transform duration-500 lg:hidden;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.mobilePanel.open {
+  @apply translate-x-0;
+}
+
+.mobileLink {
+  @apply font-bruno text-xl uppercase tracking-wide text-white/80 transition duration-300 hover:text-white;
+  position: relative;
+  padding: 8px 0;
+}
+
+.mobileLink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #22d3ee, #6366f1);
+  border-radius: 9999px;
+  opacity: 0;
+  transition: width 200ms ease, opacity 200ms ease;
+}
+
+.mobileLink:hover::after,
+.mobileLink.navLinkActive::after {
+  width: 100%;
+  opacity: 1;
 }
 </style>

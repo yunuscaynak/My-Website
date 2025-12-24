@@ -1,150 +1,101 @@
 <template>
-  <section id="contact" class="container mx-auto px-4 py-10">
-    <h1 class="text-white font-bruno text-4xl mb-8">Contact Me</h1>
+  <section id="contact" class="py-16">
+    <div class="sectionShell">
+      <div class="sectionHeader">
+        <p class="eyebrow">Contact</p>
+        <h1 class="title">Let’s build something bold.</h1>
+        <p class="lede">
+          Drop a line for collaborations, freelance work, or just to say hi. I respond fast.
+        </p>
+      </div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Contact Form -->
-      <div class="w-full lg:w-1/2">
-        <form @submit.prevent="submitForm">
-          <!-- Name Input -->
-          <div class="mb-6 relative">
-            <label for="name" class="font-bruno text-lg text-white block mb-2">
-              Your Name
-            </label>
-            <input
-              v-model="formData.name"
-              type="text"
-              id="name"
-              class="font-bruno text-lg w-full p-3 rounded-lg bg-gray-800 text-white border-2 focus:border-blue-500 transition-colors"
-              :class="{ 'border-red-500': errors.name }"
-              placeholder="Enter your name"
-              @input="validateName"
-            />
-            <span v-if="errors.name" class="text-red-500 text-sm mt-1 block">
-              {{ errors.name }}
-            </span>
-            <svg
-              v-if="errors.name"
-              class="w-5 h-5 absolute right-3 top-12 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
+      <div class="contentGrid">
+        <div class="glassCard">
+          <div class="cardHeading">
+            <span class="beam"></span>
+            <h2>Send a message</h2>
+          </div>
+          <form @submit.prevent="submitForm" class="space-y-5">
+            <div class="field">
+              <label for="name">Your Name</label>
+              <input
+                v-model="formData.name"
+                id="name"
+                type="text"
+                placeholder="Ada Lovelace"
+                :class="{ error: errors.name }"
+                @input="validateName"
               />
-            </svg>
+              <p v-if="errors.name" class="errorText">{{ errors.name }}</p>
+            </div>
+
+            <div class="field">
+              <label for="email">Your Email</label>
+              <input
+                v-model="formData.email"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                :class="{ error: errors.email }"
+                @input="validateEmail"
+              />
+              <p v-if="errors.email" class="errorText">{{ errors.email }}</p>
+            </div>
+
+            <div class="field">
+              <label for="message">Your Message</label>
+              <textarea
+                v-model="formData.message"
+                id="message"
+                rows="4"
+                placeholder="Tell me about your project..."
+                :class="{ error: errors.message }"
+                @input="validateMessage"
+              ></textarea>
+              <p v-if="errors.message" class="errorText">{{ errors.message }}</p>
+            </div>
+
+            <button type="submit" class="cta">Send Message</button>
+          </form>
+        </div>
+
+        <div class="infoPanel">
+          <div class="cardHeading">
+            <span class="beam"></span>
+            <h2>Reach out</h2>
+          </div>
+          <p class="infoText">
+            Based in Turkiye, collaborating remotely worldwide. I’m open to product builds, UI revamps, and front-end consulting.
+          </p>
+
+          <div class="chipRow">
+            <span class="chip">Available for freelance</span>
+            <span class="chip">Remote friendly</span>
+            <span class="chip">Rapid response</span>
           </div>
 
-          <!-- Email Input -->
-          <div class="mb-6 relative">
-            <label for="email" class="font-bruno text-lg text-white block mb-2">
-              Your Email
-            </label>
-            <input
-              v-model="formData.email"
-              type="email"
-              id="email"
-              class="font-bruno text-lg w-full p-3 rounded-lg bg-gray-800 text-white border-2 focus:border-blue-500 transition-colors"
-              :class="{ 'border-red-500': errors.email }"
-              placeholder="Enter your email"
-              @input="validateEmail"
-            />
-            <span v-if="errors.email" class="text-red-500 text-sm mt-1 block">
-              {{ errors.email }}
-            </span>
-            <svg
-              v-if="errors.email"
-              class="w-5 h-5 absolute right-3 top-12 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <div class="socialGrid">
+            <a
+              v-for="(social, index) in socials"
+              :key="index"
+              :href="social.url"
+              target="_blank"
+              class="socialCard"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+              <component :is="social.icon" class="icon" />
+              <span>{{ social.label }}</span>
+            </a>
           </div>
-
-          <!-- Message Input -->
-          <div class="mb-6 relative">
-            <label
-              for="message"
-              class="font-bruno text-lg text-white block mb-2"
-            >
-              Your Message
-            </label>
-            <textarea
-              v-model="formData.message"
-              id="message"
-              class="font-bruno text-lg w-full p-3 rounded-lg bg-gray-800 text-white border-2 focus:border-blue-500 transition-colors resize-none"
-              :class="{ 'border-red-500': errors.message }"
-              placeholder="Enter your message"
-              rows="5"
-              @input="validateMessage"
-            ></textarea>
-            <span v-if="errors.message" class="text-red-500 text-sm mt-1 block">
-              {{ errors.message }}
-            </span>
-            <svg
-              v-if="errors.message"
-              class="w-5 h-5 absolute right-3 top-28 text-red-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </div>
-
-          <button
-            type="submit"
-            class="font-bruno text-lg w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
-          >
-            Send Message
-          </button>
-        </form>
-
-        <!-- Success Message -->
-        <div
-          v-if="showSuccess"
-          class="fixed bottom-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg transition-all duration-300"
-          :class="
-            successMessage
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-4'
-          "
-        >
-          <strong class="font-bold">Success!</strong>
-          <span class="ml-2">{{ successMessage }}</span>
         </div>
       </div>
 
-      <!-- Social Media -->
-      <div class="w-full lg:w-1/2 flex flex-col items-center justify-center">
-        <h2 class="font-bruno text-4xl text-white mb-8">Follow Me</h2>
-        <div class="flex gap-6 flex-wrap justify-center">
-          <a
-            v-for="(social, index) in socials"
-            :key="index"
-            :href="social.url"
-            target="_blank"
-            class="flex justify-center items-center w-16 h-16 rounded-full bg-white hover:bg-gray-200 transition-all duration-300 hover:scale-110 text-gray-800"
-          >
-            <component :is="social.icon" class="w-8 h-8" />
-          </a>
-        </div>
+      <div
+        v-if="showSuccess"
+        class="toast"
+        :class="successMessage ? 'toastVisible' : 'toastHidden'"
+      >
+        <strong>Success!</strong>
+        <span class="ml-2">{{ successMessage }}</span>
       </div>
     </div>
   </section>
@@ -160,14 +111,17 @@ const socials = [
   {
     url: "https://www.instagram.com/yunus404_/",
     icon: InstagramIcon,
+    label: "Instagram",
   },
   {
     url: "https://github.com/yunuscaynak",
     icon: GithubIcon,
+    label: "GitHub",
   },
   {
     url: "https://www.linkedin.com/in/yunus-caynak-738858214/",
     icon: LinkedinIcon,
+    label: "LinkedIn",
   },
 ];
 
@@ -234,3 +188,125 @@ const submitForm = async () => {
   }
 };
 </script>
+
+<style scoped>
+.sectionShell {
+  @apply relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-6 py-10 sm:px-10 backdrop-blur;
+}
+
+.sectionShell::before,
+.sectionShell::after {
+  content: '';
+  @apply absolute inset-y-0 w-56 rounded-full opacity-25 blur-3xl;
+}
+
+.sectionShell::before {
+  @apply -left-10 bg-cyan-500/50;
+}
+
+.sectionShell::after {
+  @apply -right-10 bg-purple-500/60;
+}
+
+.sectionHeader {
+  @apply relative z-10 max-w-3xl space-y-3;
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200;
+}
+
+.title {
+  @apply font-bruno text-3xl text-white sm:text-4xl;
+}
+
+.lede {
+  @apply font-bruno text-lg text-white/80;
+}
+
+.contentGrid {
+  @apply relative z-10 mt-10 grid gap-6 lg:grid-cols-2;
+}
+
+.glassCard {
+  @apply rounded-xl border border-white/10 bg-white/10 p-6 shadow-lg shadow-cyan-500/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/20;
+}
+
+.cardHeading {
+  @apply mb-4 flex items-center gap-3 text-white;
+}
+
+.beam {
+  @apply inline-block h-10 w-1 rounded-full bg-gradient-to-b from-cyan-400 to-purple-500;
+}
+
+.glassCard h2 {
+  @apply font-bruno text-2xl text-white;
+}
+
+.field {
+  @apply flex flex-col gap-2;
+}
+
+.field label {
+  @apply font-bruno text-white;
+}
+
+.field input,
+.field textarea {
+  @apply rounded-lg border border-white/10 bg-white/10 px-3 py-3 font-bruno text-white placeholder-white/40 outline-none transition duration-200 focus:border-cyan-300 focus:bg-white/20;
+}
+
+.field input.error,
+.field textarea.error {
+  @apply border-red-500 bg-red-500/10;
+}
+
+.errorText {
+  @apply text-sm text-red-400;
+}
+
+.cta {
+  @apply w-full rounded-lg bg-gradient-to-r from-cyan-400 to-purple-500 px-4 py-3 font-bruno text-white shadow-lg shadow-purple-500/20 transition duration-300 hover:shadow-xl hover:-translate-y-0.5;
+}
+
+.infoPanel {
+  @apply rounded-xl border border-white/10 bg-gradient-to-b from-white/10 via-white/5 to-white/0 p-6 shadow-lg shadow-cyan-500/10;
+}
+
+.infoText {
+  @apply font-bruno text-white/80;
+}
+
+.chipRow {
+  @apply mt-4 flex flex-wrap gap-2;
+}
+
+.chip {
+  @apply rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white;
+}
+
+.socialGrid {
+  @apply mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3;
+}
+
+.socialCard {
+  @apply flex items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-3 font-bruno text-white transition duration-300 hover:-translate-y-1 hover:border-cyan-300/60 hover:bg-white/20;
+}
+
+.socialCard .icon {
+  @apply h-6 w-6 text-cyan-200;
+}
+
+.toast {
+  @apply fixed bottom-4 right-4 rounded-lg border border-green-400/40 bg-green-500/10 px-4 py-3 text-green-200 shadow-lg backdrop-blur transition-all duration-300;
+}
+
+.toastVisible {
+  @apply opacity-100 translate-y-0;
+}
+
+.toastHidden {
+  @apply opacity-0 translate-y-4;
+}
+</style>

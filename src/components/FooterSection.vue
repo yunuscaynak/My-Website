@@ -1,22 +1,50 @@
 <template>
-  <footer class="bg-gray-800 text-white py-4 mt-auto bottom-0 left-0 w-full">
-    <div class="max-w-screen-xl mx-auto text-center">
-      <p>&copy; 2024 - caynakyunus. All rights reserved.</p>
-      <p class="text-sm text-gray-400">
-        Built with Vue.js, Tailwind CSS, and Firebase
-      </p>
-      <div class="mt-4 text-sm text-gray-500">
-        <p>Created by <strong>Yunus Caynak</strong></p>
-        <p>
-          Contact:
-          <a
-            href="mailto:johndoe@example.com"
-            target="_blank"
-            class="text-blue-400"
-            >caynakyunus21@gmail.com</a
-          >
-        </p>
+  <footer class="footerShell">
+    <div class="max-w-6xl mx-auto grid gap-8 px-6 py-10 sm:px-10 lg:grid-cols-3">
+      <div class="space-y-3">
+        <p class="eyebrow">Yunus Caynak</p>
+        <h2 class="title">Futuristic web experiences.</h2>
+        <p class="hint">Nuxt/Vue front-ends, fast APIs, design-forward delivery.</p>
       </div>
+
+      <div class="grid gap-2 text-white/80">
+        <p class="font-bruno text-white">Quick Links</p>
+        <a href="#home" class="link">Home</a>
+        <a href="#about" class="link">About</a>
+        <a href="#mySkills" class="link">Skills</a>
+        <a href="#contact" class="link">Contact</a>
+      </div>
+
+      <div class="space-y-3">
+        <p class="font-bruno text-white">Get in touch</p>
+        <a href="mailto:caynakyunus21@gmail.com" class="link">caynakyunus21@gmail.com</a>
+        <p class="hint">Built with Vue, Tailwind, Firebase.</p>
+      </div>
+    </div>
+    <div class="border-t border-white/10 text-center text-white/50 py-4 text-sm">
+      © 2024 Yunus Caynak. All rights reserved.
     </div>
   </footer>
 </template>
+
+<style scoped>
+.footerShell {
+  @apply relative mt-auto bg-gradient-to-b from-[#0b0f1f] via-[#0b1228] to-[#06060a] text-white;
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200;
+}
+
+.title {
+  @apply font-bruno text-2xl text-white;
+}
+
+.hint {
+  @apply text-sm text-white/60;
+}
+
+.link {
+  @apply text-sm text-white/70 transition duration-200 hover:text-white;
+}
+</style>

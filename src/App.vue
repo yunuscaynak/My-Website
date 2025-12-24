@@ -33,13 +33,17 @@ import VideoBackground from './components/VideoBackground.vue';
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 body{
-  background-color: black;
+  background: linear-gradient(180deg, #05060a 0%, #0a0f1e 45%, #040507 100%);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   height: 100vh;
   margin: 0;
   overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .bruno-ace-sc-regular {

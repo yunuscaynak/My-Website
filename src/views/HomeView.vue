@@ -22,37 +22,18 @@ onMounted(() => {
 })
 </script>
 <template>
-  <main>
-    <div
-      class="min-h-screen"
-      style="background: linear-gradient(
-        180deg,
-        rgba(0,0,0,1) 0%,
-        rgba(66,0,189,1) 50%,
-        rgba(0,0,0,1) 100%
-      );"
-    >
-      <!-- About Me Section -->
-      <AboutSection />
-
-      <!-- My Skills Section -->
-      <MySkillsSection />
+  <main class="relative">
+    <div class="pointer-events-none absolute inset-0 opacity-60">
+      <div class="absolute -left-10 top-24 h-64 w-64 rounded-full bg-cyan-500/15 blur-3xl"></div>
+      <div class="absolute right-6 bottom-10 h-72 w-72 rounded-full bg-purple-500/15 blur-3xl"></div>
     </div>
-
-    <!-- Contact Me Section -->
-<section
-  class="py-20"
-  style="background: linear-gradient(
-    180deg,
-    #000000 0%,     /* En üstte siyaha yakın koyu gri */
-    #2e003e 40%,    /* Koyu mor (derinlik verir) */
-    #4b0082 70%,    /* Indigo (yumuşak mor ton) */
-    #0a0a0a 100%    /* En altta tekrar siyaha yakın */
-  );"
->
-  <ContactSection />
-</section>
-
+    <div class="relative px-6 py-4 md:px-12">
+      <AboutSection />
+      <MySkillsSection />
+      <section class="rounded-2xl border border-white/5 bg-gradient-to-b from-[#0b0f1f]/80 via-[#0f1630]/70 to-[#05060a]/90 px-2 py-12 sm:px-6">
+        <ContactSection />
+      </section>
+    </div>
   </main>
 
   <FooterSection />
