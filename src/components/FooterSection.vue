@@ -29,22 +29,33 @@
 
 <style scoped>
 .footerShell {
-  @apply relative mt-auto bg-gradient-to-b from-[#0b0f1f] via-[#0b1228] to-[#06060a] text-white;
+  @apply relative mt-auto text-white;
+  background: linear-gradient(180deg, #0f0e0c 0%, #0b0a09 100%);
+  border-top: 1px solid rgba(231, 223, 212, 0.12);
 }
 
 .eyebrow {
-  @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200;
+  @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em];
+  border-color: rgba(231, 223, 212, 0.2);
+  color: #f29f67;
+  background: rgba(231, 223, 212, 0.05);
 }
 
 .title {
-  @apply font-bruno text-2xl text-white;
+  @apply font-bruno text-2xl;
+  color: #e7dfd4;
 }
 
 .hint {
-  @apply text-sm text-white/60;
+  @apply text-sm;
+  color: rgba(231, 223, 212, 0.6);
 }
 
 .link {
-  @apply text-sm text-white/70 transition duration-200 hover:text-white;
+  @apply text-sm transition duration-200;
+  color: rgba(231, 223, 212, 0.7);
+}
+.link:hover {
+  color: #f29f67;
 }
 </style>

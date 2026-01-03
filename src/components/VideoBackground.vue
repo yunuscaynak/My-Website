@@ -7,7 +7,7 @@
       <div class="skills-header px-15">
         <div>
           <p class="skills-description">
-            Future-ready developer · Vue/Nuxt · Node · MongoDB · Firebase · Three.js
+            Frontend Developer · Vue/Nuxt · Node · MongoDB · Firebase · Three.js · Python 
           </p>
         </div>
         <div class="skills-tags">
@@ -17,22 +17,6 @@
           <span class="skill-tag">GraphQL</span>
         </div>
       </div>
-
-      <!-- Hero Section -->
-      <div class="hero-overlay">
-        <div class="hero-card">
-          <div class="typing">
-            <span class="textArea font-bruno">
-              {{ displayText }}<span class="cursor">|</span>
-            </span>
-          </div>
-          <div class="hero-cta">
-            <a href="#contact" class="ctaPrimary">Start a project</a>
-            <a href="#mySkills" class="ctaGhost">View skill stack</a>
-          </div>
-        </div>
-      </div>
-
 
       <!-- Hover Tooltip -->
       <div v-show="tooltip.visible" :style="tooltipStyle" class="skill-tooltip">
@@ -45,7 +29,21 @@
           drag to orbit · scroll to zoom · hover skills
         </div>
       </div>
+
+      <!-- Hero overlay (partially over animation) -->
+      <div class="hero-overlay">
+        <div class="hero-card">
+          <div class="typing">
+            <span class="textArea font-bruno">
+              {{ displayText }}<span class="cursor">|</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-hint">drag to orbit · scroll to zoom · hover skills</div>
     </div>
+
   </div>
 </template>
 
@@ -767,10 +765,11 @@ const handleMouseLeave = () => {
   margin-top: 64px;
   scroll-margin-top: 0;
   border-radius: 0;
-  overflow: hidden;
-  background: radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.15), transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(99, 102, 241, 0.18), transparent 40%),
-    linear-gradient(to bottom, #0b0f1f, #0c1022, #05060a);
+  overflow: visible;
+  background: radial-gradient(circle at 18% 22%, rgba(242, 159, 103, 0.14), transparent 42%),
+    radial-gradient(circle at 78% 18%, rgba(126, 191, 159, 0.16), transparent 38%),
+    radial-gradient(circle at 64% 78%, rgba(231, 223, 212, 0.1), transparent 36%),
+    linear-gradient(to bottom, #0f0e0c, #0c0f0c, #0a0c0a);
 }
 
 .skills-portfolio__canvas-container {
@@ -802,12 +801,12 @@ const handleMouseLeave = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(231, 223, 212, 0.9);
 }
 
 .skills-description {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(231, 223, 212, 0.7);
   margin: 0;
 }
 
@@ -832,7 +831,7 @@ const handleMouseLeave = () => {
   padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
   border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(231, 223, 212, 0.12);
   backdrop-filter: blur(4px);
 }
 
@@ -857,6 +856,8 @@ const handleMouseLeave = () => {
   right: 0;
   display: flex;
   justify-content: center;
+  z-index: 6;
+  pointer-events: none;
 }
 
 .controls-hint__content {
@@ -864,9 +865,10 @@ const handleMouseLeave = () => {
   font-size: 0.625rem;
   border-radius: 9999px;
   background-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(231, 223, 212, 0.8);
   backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(231, 223, 212, 0.12);
+  pointer-events: auto;
 }
 
 @media (min-width: 768px) {
@@ -879,52 +881,142 @@ const handleMouseLeave = () => {
   background-color: #0b0f17;
 }
 
-/* Hero overlay (from HomeSection) */
+/* Hero overlay (desktop) */
 .hero-overlay {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
   z-index: 5;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: flex-start;
   pointer-events: none;
-  padding: clamp(0.5rem, 1.5vw, 1rem);
+  width: 100%;
+  padding: 0 1rem;
 }
 
 .hero-card {
   pointer-events: auto;
-  width: min(90vw, 460px);
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(4px);
-  border-radius: 18px;
-  padding: clamp(0.75rem, 1.8vw, 1.15rem);
+  width: min(90vw, 500px);
+  background: linear-gradient(135deg, rgba(15, 12, 10, 0.92), rgba(26, 21, 18, 0.95));
+  border: 1px solid rgba(231, 223, 212, 0.22);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(231, 223, 212, 0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: clamp(0.7rem, 1.8vw, 1rem);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
 }
 
 .typing {
   margin-top: 0;
+  min-height: 1.6em;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(231, 223, 212, 0.2);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 .textArea {
-  color: #c0f4ff;
+  color: #f8f3e9;
   font-weight: 700;
-  font-size: clamp(1rem, 1.8vw, 1.45rem);
+  font-size: clamp(1.05rem, 1.9vw, 1.55rem);
   line-height: 1.35;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  letter-spacing: 0.01em;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .cursor {
-  color: #c0f4ff;
+  color: #f29f67;
+  background: transparent;
   animation: blink 0.7s infinite;
+  display: inline-block;
+  width: 0.55ch;
+  margin-left: 2px;
 }
 
 .hero-cta {
-  margin-top: 0.5rem;
+  margin: 0;
   display: inline-flex;
+  flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
+  width: auto;
+  position: relative;
+  isolation: isolate;
+  justify-content: flex-end;
+}
+
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 18px;
+  border: 1px dashed rgba(231, 223, 212, 0.15);
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .hero-card {
+    flex-direction: column;
+    align-items: flex-start;
+    width: min(94vw, 520px);
+    gap: 0.95rem;
+    align-self: center;
+  }
+
+  .hero-cta {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+
+  .ctaPrimary,
+  .ctaGhost {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-overlay {
+    position: static;
+    transform: none;
+    padding: 0 0.75rem 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .hero-card {
+    width: 100%;
+  }
+
+  .hero-cta::before {
+    inset: -6px;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-cta {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: auto;
+  }
 }
 
 .ctaPrimary {
@@ -932,43 +1024,116 @@ const handleMouseLeave = () => {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.7rem 1.2rem;
+  padding: 0.78rem 1.25rem;
   border-radius: 14px;
-  background: linear-gradient(90deg, #22d3ee, #a855f7);
-  color: white;
+  background: linear-gradient(120deg, #f29f67, #7ebf9f);
+  color: #0c0a09;
   font-family: 'Bruno Ace SC', sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   letter-spacing: 0.02em;
-  box-shadow: 0 12px 28px rgba(168, 85, 247, 0.28);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  outline: none;
+  flex: 0 0 auto;
 }
 
 .ctaPrimary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 38px rgba(168, 85, 247, 0.35);
-  filter: brightness(1.05);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.02);
+}
+
+.ctaPrimary:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.55);
+  outline-offset: 3px;
 }
 
 .ctaGhost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.7rem 1.2rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.9);
+  padding: 0.72rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(231, 223, 212, 0.22);
+  color: rgba(231, 223, 212, 0.9);
   font-family: 'Bruno Ace SC', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   letter-spacing: 0.02em;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(231, 223, 212, 0.08);
   transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  outline: none;
+  flex: 0 0 auto;
 }
 
 .ctaGhost:hover {
   transform: translateY(-2px);
-  border-color: #22d3ee;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  border-color: #f29f67;
+  color: #e7dfd4;
+  background: rgba(231, 223, 212, 0.12);
+}
+
+.ctaGhost:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.5);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .hero-card {
+    width: min(95vw, 375px);
+    padding: 0.65rem;
+    gap: 0.55rem;
+  }
+
+  .textArea {
+    font-size: 0.86rem;
+    white-space: nowrap;
+  }
+
+  .hero-cta {
+    gap: 0.4rem;
+  }
+
+  .ctaPrimary,
+  .ctaGhost {
+    padding: 0.6rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+  }
+}
+
+.mobile-hint {
+  margin-top: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(231, 223, 212, 0.18);
+  color: #0c0a09;
+  border: 1px solid rgba(231, 223, 212, 0.24);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  width: 100%;
+  justify-content: center;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.mobile-hint-inline {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .hero-overlay {
+    display: none;
+  }
+
+  .hero-card {
+    width: min(96vw, 520px);
+  }
+
+  .mobile-hint-inline {
+    display: inline-flex;
+  }
 }
 
 @keyframes blink {

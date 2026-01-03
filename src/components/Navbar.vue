@@ -29,6 +29,10 @@
       class="mobilePanel"
       :class="{ open: isMenuOpen }"
     >
+      <button @click="closeMenu" class="closeButton" aria-label="Menüyü kapat">
+        <span class="closeIcon"></span>
+        <span class="closeLabel">Close</span>
+      </button>
       <RouterLink
         v-for="link in links"
         :key="link.to"
@@ -87,14 +91,14 @@ onBeforeUnmount(() => {
 <style scoped>
 .navShell {
   @apply fixed top-0 left-0 z-50 flex w-full items-center justify-between px-6 py-4 md:px-12 transition-all duration-300;
-  background: linear-gradient(120deg, rgba(34, 211, 238, 0.15), rgba(99, 102, 241, 0.15));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  background: rgba(12, 10, 9, 0.92);
+  border-bottom: 1px solid rgba(231, 223, 212, 0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
 .navScrolled {
-  @apply shadow-lg shadow-purple-500/10;
-  background: linear-gradient(120deg, rgba(34, 211, 238, 0.3), rgba(99, 102, 241, 0.3));
+  @apply shadow-lg;
+  background: rgba(12, 10, 9, 0.96);
 }
 
 .brand {
@@ -102,11 +106,18 @@ onBeforeUnmount(() => {
 }
 
 .brandMark {
-  @apply text-2xl font-bruno text-white transition duration-300 hover:text-cyan-300;
+  @apply text-2xl font-bruno text-white transition duration-300;
+  color: #e7dfd4;
+  letter-spacing: 0.08em;
+}
+
+.brandMark:hover {
+  color: #f29f67;
 }
 
 .brandHint {
-  @apply text-xs uppercase tracking-[0.2em] text-white/60 hidden sm:inline;
+  @apply text-xs uppercase tracking-[0.2em] hidden sm:inline;
+  color: rgba(231, 223, 212, 0.45);
 }
 
 .desktopLinks {
@@ -114,8 +125,10 @@ onBeforeUnmount(() => {
 }
 
 .navLink {
-  @apply relative flex items-center gap-2 font-bruno text-sm text-white/80 uppercase tracking-wide transition duration-300 hover:text-white;
-  padding-bottom: 6px;
+  @apply relative flex items-center gap-2 font-bruno text-sm uppercase tracking-wide transition duration-300;
+  padding: 6px 0;
+  color: rgba(231, 223, 212, 0.72);
+  outline: none;
 }
 
 .navLink::after {
@@ -125,7 +138,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #22d3ee, #6366f1);
+  background: linear-gradient(90deg, #f29f67, #7ebf9f);
   border-radius: 9999px;
   opacity: 0;
   transition: width 200ms ease, opacity 200ms ease;
@@ -138,26 +151,44 @@ onBeforeUnmount(() => {
 }
 
 .navLink .dot {
-  @apply h-1 w-1 rounded-full bg-white/40 transition duration-300;
+  @apply h-1 w-1 rounded-full transition duration-300;
+  background: rgba(231, 223, 212, 0.35);
 }
 
 .navLinkActive {
-  @apply text-white;
+  color: #e7dfd4;
 }
 
 .navLinkActive .dot {
-  @apply bg-cyan-300 w-2;
+  @apply w-2;
+  background: #f29f67;
+}
+
+.navLink:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.45);
+  outline-offset: 6px;
+  border-radius: 10px;
+  color: #e7dfd4;
 }
 
 .menuButton {
-  @apply relative h-10 w-10 rounded-full border border-white/20 bg-white/5 p-2 text-white shadow-md shadow-cyan-400/20 transition duration-300 hover:-translate-y-0.5 hover:border-cyan-200/60 hover:bg-white/10;
+  @apply relative h-10 w-10 rounded-full border p-2 text-white transition duration-300 hover:-translate-y-0.5;
+  border-color: rgba(231, 223, 212, 0.18);
+  background: rgba(231, 223, 212, 0.08);
+  outline: none;
+}
+
+.menuButton:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.45);
+  outline-offset: 4px;
 }
 
 .menuIcon,
 .menuIcon::before,
 .menuIcon::after {
-  @apply absolute left-1/2 h-0.5 w-6 -translate-x-1/2 bg-white transition-all duration-300;
+  @apply absolute left-1/2 h-0.5 w-6 -translate-x-1/2 transition-all duration-300;
   content: '';
+  background: #e7dfd4;
 }
 
 .menuIcon {
@@ -185,9 +216,57 @@ onBeforeUnmount(() => {
 }
 
 .mobilePanel {
-  @apply fixed top-0 right-0 flex h-full w-3/4 translate-x-full flex-col items-center gap-6 bg-gradient-to-b from-[#0b1228]/95 via-[#111d3b]/95 to-[#0b1228]/95 px-8 py-16 text-white shadow-2xl transition-transform duration-500 lg:hidden;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  @apply fixed top-0 right-0 flex h-full w-3/4 translate-x-full flex-col items-center gap-6 px-8 py-16 text-white shadow-2xl transition-transform duration-500 lg:hidden;
+  background: rgba(12, 10, 9, 0.98);
+  border-left: 1px solid rgba(231, 223, 212, 0.14);
+}
+
+.closeButton {
+  @apply mb-4 self-end flex items-center gap-2 rounded-full px-3 py-2 text-sm uppercase tracking-wide transition duration-200;
+  color: rgba(231, 223, 212, 0.85);
+  border: 1px solid rgba(231, 223, 212, 0.18);
+  background: rgba(231, 223, 212, 0.06);
+}
+
+.closeButton:hover {
+  border-color: #f29f67;
+  color: #f29f67;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.45);
+  outline-offset: 4px;
+}
+
+.closeIcon {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+}
+
+.closeIcon::before,
+.closeIcon::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.closeIcon::before {
+  transform: rotate(45deg);
+}
+
+.closeIcon::after {
+  transform: rotate(-45deg);
+}
+
+.closeLabel {
+  @apply font-bruno;
 }
 
 .mobilePanel.open {
@@ -195,7 +274,8 @@ onBeforeUnmount(() => {
 }
 
 .mobileLink {
-  @apply font-bruno text-xl uppercase tracking-wide text-white/80 transition duration-300 hover:text-white;
+  @apply font-bruno text-xl uppercase tracking-wide transition duration-300;
+  color: rgba(231, 223, 212, 0.82);
   position: relative;
   padding: 8px 0;
 }
@@ -207,7 +287,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, #22d3ee, #6366f1);
+  background: linear-gradient(90deg, #f29f67, #7ebf9f);
   border-radius: 9999px;
   opacity: 0;
   transition: width 200ms ease, opacity 200ms ease;

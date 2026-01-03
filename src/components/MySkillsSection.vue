@@ -84,21 +84,30 @@ const signals = [
 
 <style scoped>
 .sectionShell {
-  @apply relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-6 py-10 sm:px-10 backdrop-blur;
+  @apply relative overflow-hidden rounded-2xl border px-6 py-10 sm:px-10;
+  border-color: rgba(231, 223, 212, 0.12);
+  background:
+    repeating-linear-gradient(0deg, rgba(231, 223, 212, 0.03), rgba(231, 223, 212, 0.03) 1px, transparent 1px, transparent 26px),
+    repeating-linear-gradient(90deg, rgba(231, 223, 212, 0.02), rgba(231, 223, 212, 0.02) 1px, transparent 1px, transparent 26px),
+    linear-gradient(140deg, rgba(19, 18, 15, 0.9), rgba(10, 10, 9, 0.95));
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.32);
 }
 
 .sectionShell::before,
 .sectionShell::after {
   content: '';
-  @apply absolute inset-y-0 w-56 rounded-full opacity-25 blur-3xl;
+  @apply absolute inset-y-0 w-56 rounded-full blur-3xl;
+  opacity: 0.2;
 }
 
 .sectionShell::before {
-  @apply -left-10 bg-cyan-500/50;
+  background: radial-gradient(circle, rgba(242, 159, 103, 0.45), transparent 65%);
+  left: -2.5rem;
 }
 
 .sectionShell::after {
-  @apply -right-10 bg-purple-500/60;
+  background: radial-gradient(circle, rgba(126, 191, 159, 0.5), transparent 65%);
+  right: -2.5rem;
 }
 
 .sectionHeader {
@@ -106,15 +115,20 @@ const signals = [
 }
 
 .eyebrow {
-  @apply inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-200;
+  @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em];
+  border-color: rgba(231, 223, 212, 0.2);
+  color: #f29f67;
+  background: rgba(231, 223, 212, 0.05);
 }
 
 .title {
-  @apply font-bruno text-4xl text-white sm:text-5xl;
+  @apply font-bruno text-4xl sm:text-5xl;
+  color: #e7dfd4;
 }
 
 .lede {
-  @apply font-bruno text-lg text-white/80 sm:text-xl;
+  @apply font-bruno text-lg sm:text-xl;
+  color: rgba(231, 223, 212, 0.78);
 }
 
 .skillGrid {
@@ -122,7 +136,24 @@ const signals = [
 }
 
 .skillCard {
-  @apply rounded-xl border border-white/10 bg-gradient-to-b from-white/10 via-white/5 to-white/0 p-6 shadow-lg shadow-cyan-500/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/20;
+  @apply rounded-xl border p-6 transition duration-300 hover:-translate-y-1;
+  border-color: rgba(231, 223, 212, 0.12);
+  background: rgba(18, 18, 16, 0.82);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.skillCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, #f29f67, #7ebf9f);
+  opacity: 0.9;
 }
 
 .cardTop {
@@ -130,15 +161,19 @@ const signals = [
 }
 
 .orb {
-  @apply h-10 w-10 rounded-full border border-white/40 shadow-md shadow-cyan-400/30;
+  @apply h-10 w-10 rounded-full border shadow-md;
+  border-color: rgba(231, 223, 212, 0.24);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
 .cardTitle {
-  @apply font-bruno text-xl text-white;
+  @apply font-bruno text-xl;
+  color: #e7dfd4;
 }
 
 .cardHint {
-  @apply text-sm text-white/70;
+  @apply text-sm;
+  color: rgba(231, 223, 212, 0.65);
 }
 
 .pillWrap {
@@ -146,15 +181,20 @@ const signals = [
 }
 
 .pill {
-  @apply rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white;
+  @apply rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+  border-color: rgba(231, 223, 212, 0.22);
+  background: rgba(231, 223, 212, 0.08);
+  color: #e7dfd4;
 }
 
 .meter {
-  @apply mt-4 h-2 overflow-hidden rounded-full bg-white/10;
+  @apply mt-4 h-2 overflow-hidden rounded-full;
+  background: rgba(231, 223, 212, 0.12);
 }
 
 .meterFill {
-  @apply block h-full rounded-full shadow-lg shadow-cyan-400/40;
+  @apply block h-full rounded-full;
+  box-shadow: 0 8px 24px rgba(242, 159, 103, 0.2);
 }
 
 .signalGrid {
@@ -162,28 +202,47 @@ const signals = [
 }
 
 .signalCard {
-  @apply rounded-lg border border-white/10 bg-white/5 px-4 py-5 shadow-inner shadow-cyan-500/5 transition duration-300;
+  @apply rounded-lg border px-4 py-5 transition duration-300;
+  border-color: rgba(231, 223, 212, 0.12);
+  background: rgba(18, 17, 16, 0.85);
   transform: translateY(0);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  position: relative;
+  overflow: hidden;
 }
 
 .signalCard:hover {
-  @apply border-cyan-300/40 bg-white/10 shadow-cyan-400/15;
+  border-color: rgba(242, 159, 103, 0.35);
+  background: rgba(231, 223, 212, 0.07);
   transform: translateY(-4px) scale(1.01);
 }
 
+.signalCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #f29f67, #7ebf9f);
+  opacity: 0.85;
+}
+
 .signalLabel {
-  @apply text-xs uppercase tracking-wide text-cyan-200 transition duration-300;
+  @apply text-xs uppercase tracking-wide transition duration-300;
+  color: rgba(231, 223, 212, 0.6);
 }
 
 .signalBody {
-  @apply font-bruno text-base text-white/80 transition duration-300;
+  @apply font-bruno text-base transition duration-300;
+  color: rgba(231, 223, 212, 0.78);
 }
 
 .signalCard:hover .signalLabel {
-  @apply text-cyan-100;
+  color: #f29f67;
 }
 
 .signalCard:hover .signalBody {
-  @apply text-white;
+  color: #e7dfd4;
 }
 </style>

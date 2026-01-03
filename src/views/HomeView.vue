@@ -30,9 +30,7 @@ onMounted(() => {
     <div class="relative px-6 py-4 md:px-12">
       <AboutSection />
       <MySkillsSection />
-      <section class="rounded-2xl border border-white/5 bg-gradient-to-b from-[#0b0f1f]/80 via-[#0f1630]/70 to-[#05060a]/90 px-2 py-12 sm:px-6">
-        <ContactSection />
-      </section>
+      <ContactSection />
     </div>
   </main>
 

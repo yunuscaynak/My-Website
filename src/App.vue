@@ -31,15 +31,19 @@ import VideoBackground from './components/VideoBackground.vue';
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Space+Grotesk:wght@400;500;600;700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 body{
-  background: linear-gradient(180deg, #05060a 0%, #0a0f1e 45%, #040507 100%);
+  background: radial-gradient(circle at 15% 20%, rgba(205, 141, 96, 0.14), transparent 32%),
+    radial-gradient(circle at 80% 12%, rgba(109, 175, 140, 0.12), transparent 30%),
+    radial-gradient(circle at 60% 80%, rgba(255, 214, 153, 0.16), transparent 28%),
+    linear-gradient(180deg, #0c0a09 0%, #0f1410 45%, #0a0c0a 100%);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   height: 100vh;
-  margin: 0;
   overflow-x: hidden;
+  color: #e7dfd4;
+  font-family: "Space Grotesk", "Roboto Mono", system-ui, -apple-system, sans-serif;
 }
 
 html {
