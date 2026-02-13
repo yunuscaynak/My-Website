@@ -7,14 +7,16 @@
       <div class="skills-header px-15">
         <div>
           <p class="skills-description">
-            Frontend Developer · Vue/Nuxt · Node · MongoDB · Firebase · Three.js · Python 
+            Frontend Developer · Vue/Nuxt/Next/React · Node.js · Python · Django · Docker · Git/Linux
           </p>
         </div>
         <div class="skills-tags">
-          <span class="skill-tag">Nuxt 3</span>
-          <span class="skill-tag">Tailwind</span>
-          <span class="skill-tag">JWT</span>
-          <span class="skill-tag">GraphQL</span>
+          <span class="skill-tag">Nuxt.js</span>
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">React.js</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Docker</span>
         </div>
       </div>
 
@@ -99,16 +101,15 @@ const SCENE_CONFIG = {
 }
 
 const SKILLS_DATA = [
-  { label: 'Vue.js', color: 0x42b883, orbit: 2.2, size: 0.18, speed: 0.6, category: 'frontend', glowIntensity: 0.3 },
-  { label: 'Nuxt.js', color: 0x00dc82, orbit: 2.8, size: 0.18, speed: 0.5, category: 'frontend', glowIntensity: 0.4 },
-  { label: 'Node.js', color: 0x8cc84b, orbit: 3.4, size: 0.2, speed: 0.45, category: 'backend', glowIntensity: 0.35 },
-  { label: 'Express', color: 0xffffff, orbit: 4.0, size: 0.16, speed: 0.42, category: 'backend', glowIntensity: 0.5 },
-  { label: 'MongoDB', color: 0x00ed64, orbit: 4.6, size: 0.2, speed: 0.38, category: 'database', glowIntensity: 0.3 },
-  { label: 'Firebase', color: 0xffca28, orbit: 5.2, size: 0.18, speed: 0.36, category: 'cloud', glowIntensity: 0.4 },
-  { label: 'Tailwind', color: 0x38bdf8, orbit: 5.8, size: 0.18, speed: 0.34, category: 'styling', glowIntensity: 0.45 },
-  { label: 'Three.js', color: 0xffffff, orbit: 6.4, size: 0.2, speed: 0.32, category: '3d', glowIntensity: 0.6 },
-  { label: 'Python', color: 0x3671a5, orbit: 7.0, size: 0.18, speed: 0.30, category: 'language', glowIntensity: 0.25 },
-  { label: 'SQL', color: 0xb0b0ff, orbit: 7.6, size: 0.16, speed: 0.28, category: 'database', glowIntensity: 0.3 }
+  { label: 'Vue.js', color: 0x42b883, orbit: 2.2, size: 0.18, speed: 0.62, category: 'frontend', glowIntensity: 0.35 },
+  { label: 'Nuxt', color: 0x00dc82, orbit: 2.65, size: 0.18, speed: 0.57, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'Next.js', color: 0xffffff, orbit: 3.1, size: 0.18, speed: 0.53, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'React', color: 0x61dafb, orbit: 3.55, size: 0.18, speed: 0.49, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'Node.js', color: 0x8cc84b, orbit: 4.0, size: 0.2, speed: 0.45, category: 'backend', glowIntensity: 0.35 },
+  { label: 'Python', color: 0x3671a5, orbit: 4.45, size: 0.18, speed: 0.42, category: 'language', glowIntensity: 0.3 },
+  { label: 'Django', color: 0x0c4b33, orbit: 4.9, size: 0.17, speed: 0.38, category: 'backend', glowIntensity: 0.4 },
+  { label: 'Docker', color: 0x2496ed, orbit: 5.35, size: 0.17, speed: 0.35, category: 'devops', glowIntensity: 0.4 },
+  { label: 'Git/Linux', color: 0xf97316, orbit: 5.8, size: 0.16, speed: 0.32, category: 'tooling', glowIntensity: 0.35 }
 ]
 
 // Reactive references
