@@ -53,7 +53,7 @@ const skillSets = [
   {
     title: 'Backend & APIs',
     subtitle: 'Scalable services and clean data contracts.',
-    items: ['Node.js', 'Express.js', 'Python', 'Django', 'PHP'],
+    items: ['Node.js', 'NestJS', 'Express.js', 'Python', 'Django', 'PHP'],
     gradient: 'linear-gradient(90deg, #a855f7 0%, #22d3ee 100%)',
     signal: '82%',
   },
@@ -73,7 +73,7 @@ const signals = [
   },
   {
     label: 'API-first',
-    body: 'Express/Node and Python services that keep data flowing predictably.',
+    body: 'Node.js, NestJS, and Python services that keep data flowing predictably.',
   },
   {
     label: 'Data layer',

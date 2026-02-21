@@ -7,7 +7,7 @@
       <div class="skills-header px-15">
         <div>
           <p class="skills-description">
-            Frontend Developer · Vue/Nuxt/Next/React · Node.js · Python · Django · Docker · Git/Linux
+            Frontend Developer · Vue/Nuxt/Next/React · Node.js · NestJS · Python · Django · Docker · Git/Linux
           </p>
         </div>
         <div class="skills-tags">
@@ -15,6 +15,7 @@
           <span class="skill-tag">Next.js</span>
           <span class="skill-tag">React.js</span>
           <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">NestJS</span>
           <span class="skill-tag">Python</span>
           <span class="skill-tag">Docker</span>
         </div>
@@ -102,14 +103,15 @@ const SCENE_CONFIG = {
 
 const SKILLS_DATA = [
   { label: 'Vue.js', color: 0x42b883, orbit: 2.2, size: 0.18, speed: 0.62, category: 'frontend', glowIntensity: 0.35 },
-  { label: 'Nuxt', color: 0x00dc82, orbit: 2.65, size: 0.18, speed: 0.57, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'Nuxt.js', color: 0x00dc82, orbit: 2.65, size: 0.18, speed: 0.57, category: 'frontend', glowIntensity: 0.4 },
   { label: 'Next.js', color: 0xffffff, orbit: 3.1, size: 0.18, speed: 0.53, category: 'frontend', glowIntensity: 0.4 },
   { label: 'React', color: 0x61dafb, orbit: 3.55, size: 0.18, speed: 0.49, category: 'frontend', glowIntensity: 0.4 },
   { label: 'Node.js', color: 0x8cc84b, orbit: 4.0, size: 0.2, speed: 0.45, category: 'backend', glowIntensity: 0.35 },
-  { label: 'Python', color: 0x3671a5, orbit: 4.45, size: 0.18, speed: 0.42, category: 'language', glowIntensity: 0.3 },
-  { label: 'Django', color: 0x0c4b33, orbit: 4.9, size: 0.17, speed: 0.38, category: 'backend', glowIntensity: 0.4 },
-  { label: 'Docker', color: 0x2496ed, orbit: 5.35, size: 0.17, speed: 0.35, category: 'devops', glowIntensity: 0.4 },
-  { label: 'Git/Linux', color: 0xf97316, orbit: 5.8, size: 0.16, speed: 0.32, category: 'tooling', glowIntensity: 0.35 }
+  { label: 'NestJS', color: 0xe0234e, orbit: 4.45, size: 0.19, speed: 0.42, category: 'backend', glowIntensity: 0.45 },
+  { label: 'Python', color: 0x3671a5, orbit: 4.9, size: 0.18, speed: 0.39, category: 'language', glowIntensity: 0.3 },
+  { label: 'Django', color: 0x0c4b33, orbit: 5.35, size: 0.17, speed: 0.36, category: 'backend', glowIntensity: 0.4 },
+  { label: 'Docker', color: 0x2496ed, orbit: 5.8, size: 0.17, speed: 0.33, category: 'devops', glowIntensity: 0.4 },
+  { label: 'Git/Linux', color: 0xf97316, orbit: 6.25, size: 0.16, speed: 0.3, category: 'tooling', glowIntensity: 0.35 }
 ]
 
 // Reactive references
@@ -173,6 +175,14 @@ class ThreeScene {
     this.centralCore = null
     this.orbitRings = []
     this.floatingParticles = []
+    this.constellation = null
+    this.meteors = []
+    this.meteorSpawnTimer = 0
+    this.nextMeteorDelay = 1.1
+    this.blackHolePulse = 0
+    this.blackHoleTarget = 0
+    this.baseCameraY = SCENE_CONFIG.camera.position.y
+    this.lastFrameTime = 0
   }
 
   init(canvasElement, containerElement) {
@@ -275,6 +285,10 @@ class ThreeScene {
 
     // Skill orbits and planets
     this.createSkillsVisualization()
+
+    // Constellation links between close skills
+    this.constellation = this.createConstellationNetwork()
+    this.scene.add(this.constellation.line)
   }
 
   createStarField() {
@@ -410,6 +424,96 @@ class ThreeScene {
     return group
   }
 
+  createConstellationNetwork() {
+    const maxSegments = 40
+    const positions = new Float32Array(maxSegments * 2 * 3)
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setDrawRange(0, 0)
+
+    const material = new THREE.LineBasicMaterial({
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.2,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+
+    const line = new THREE.LineSegments(geometry, material)
+    line.frustumCulled = false
+    return { line, maxSegments, positions }
+  }
+
+  createCometTrail(color) {
+    const trailLength = 20
+    const positions = new Float32Array(trailLength * 3)
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setDrawRange(0, trailLength)
+
+    const material = new THREE.LineBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.28,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    })
+
+    const trail = new THREE.Line(geometry, material)
+    trail.userData = { trailLength }
+    this.scene.add(trail)
+    return trail
+  }
+
+  spawnMeteor() {
+    const startRadius = 18 + Math.random() * 8
+    const theta = Math.random() * Math.PI * 2
+    const phi = Math.random() * Math.PI
+    const start = new THREE.Vector3(
+      startRadius * Math.sin(phi) * Math.cos(theta),
+      (Math.random() - 0.5) * 8,
+      startRadius * Math.sin(phi) * Math.sin(theta)
+    )
+
+    const centerDir = start.clone().multiplyScalar(-1).normalize()
+    const drift = new THREE.Vector3(Math.random() - 0.5, (Math.random() - 0.5) * 0.4, Math.random() - 0.5).normalize()
+    const velocity = centerDir.add(drift.multiplyScalar(0.35)).normalize().multiplyScalar(4.6 + Math.random() * 2.4)
+
+    const meteor = new THREE.Group()
+    const headMaterial = new THREE.MeshBasicMaterial({
+      color: 0xf8fafc,
+      transparent: true,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending
+    })
+    const tailMaterial = new THREE.MeshBasicMaterial({
+      color: 0x93c5fd,
+      transparent: true,
+      opacity: 0.45,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide
+    })
+
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 12), headMaterial)
+    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.065, 0.9, 8, 1, true), tailMaterial)
+    tail.position.z = -0.45
+    tail.rotation.x = Math.PI / 2
+    meteor.add(head)
+    meteor.add(tail)
+    meteor.position.copy(start)
+    meteor.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), velocity.clone().normalize())
+
+    this.scene.add(meteor)
+    this.meteors.push({
+      mesh: meteor,
+      velocity,
+      life: 2.3 + Math.random() * 1,
+      maxLife: 3.3,
+      headMaterial,
+      tailMaterial
+    })
+  }
+
   createSkillsVisualization() {
     // Create animated orbit rings
     SKILLS_DATA.forEach((skill, index) => {
@@ -455,6 +559,7 @@ class ThreeScene {
         phase: (index / SKILLS_DATA.length) * Math.PI * 2,
         originalSize: skill.size,
         category: skill.category,
+        baseEmissiveIntensity: skill.glowIntensity || 0.3,
         bobbingPhase: Math.random() * Math.PI * 2,
         rotationSpeed: 0.01 + Math.random() * 0.02
       }
@@ -464,7 +569,8 @@ class ThreeScene {
       const label = this.createTextSprite(skill.label)
       this.scene.add(label)
 
-      this.planets.push({ mesh, label })
+      const trail = this.createCometTrail(skill.color)
+      this.planets.push({ mesh, label, trail })
     })
   }
 
@@ -523,9 +629,11 @@ class ThreeScene {
   setupEventListeners() {
     this.handleMouseMove = this.handleMouseMove.bind(this)
     this.handleResize = this.handleResize.bind(this)
+    this.handleWheel = this.handleWheel.bind(this)
 
     window.addEventListener('mousemove', this.handleMouseMove)
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('wheel', this.handleWheel, { passive: true })
 
     if (container.value) {
       this.resizeObserver = new ResizeObserver(this.handleResize)
@@ -550,6 +658,11 @@ class ThreeScene {
     this.resetPlanetScales()
   }
 
+  handleWheel(event) {
+    const impulse = Math.min(1.1, Math.abs(event.deltaY) / 450)
+    this.blackHoleTarget = Math.min(1.2, this.blackHoleTarget + 0.28 + impulse * 0.45)
+  }
+
   handleResize() {
     if (!container.value || !this.camera || !this.renderer) return
 
@@ -564,7 +677,13 @@ class ThreeScene {
 
   animate(time = 0) {
     this.animationTime = time * 0.001
+    const delta = this.lastFrameTime ? Math.min(0.05, this.animationTime - this.lastFrameTime) : 0.016
+    this.lastFrameTime = this.animationTime
     const { coreRotationSpeed, ringPulseSpeed, planetBobbing, cameraFloat } = SCENE_CONFIG.animations
+
+    // Black hole pulse
+    this.blackHoleTarget *= 0.94
+    this.blackHolePulse += (this.blackHoleTarget - this.blackHolePulse) * 0.09
 
     // Animate central core
     if (this.centralCore) {
@@ -573,18 +692,22 @@ class ThreeScene {
       this.centralCore.rotation.z = this.animationTime * coreRotationSpeed * 0.5
 
       // Core pulsing effect
-      const pulse = 1 + Math.sin(this.animationTime * 3) * 0.05
+      const pulse = 1 + Math.sin(this.animationTime * 3) * 0.05 + this.blackHolePulse * 0.06
       this.centralCore.scale.setScalar(pulse)
+    }
+
+    if (this.bloomPass) {
+      this.bloomPass.strength = SCENE_CONFIG.bloom.strength + this.blackHolePulse * 0.45
     }
 
     // Animate orbit rings
     this.orbitRings.forEach((ring, index) => {
       const { phase, pulseSpeed } = ring.userData
       const opacity = ring.userData.originalOpacity + Math.sin(this.animationTime * 2 + phase) * 0.15
-      ring.material.opacity = Math.max(0.1, opacity)
+      ring.material.opacity = Math.max(0.1, opacity + this.blackHolePulse * 0.2)
 
       // Ring rotation
-      ring.rotation.z = this.animationTime * pulseSpeed
+      ring.rotation.z = this.animationTime * (pulseSpeed + ringPulseSpeed * 0.1)
     })
 
     // Animate floating particles
@@ -597,7 +720,10 @@ class ThreeScene {
       }
 
       for (let i = 0; i < positions.length; i += 3) {
+        const grav = 1 - this.blackHolePulse * 0.08
+        positions[i] = originalPositions[i] * grav
         positions[i + 1] = originalPositions[i + 1] + Math.sin(this.animationTime * 0.5 + i * 0.01) * 2
+        positions[i + 2] = originalPositions[i + 2] * grav
       }
       this.floatingParticles.geometry.attributes.position.needsUpdate = true
     }
@@ -616,11 +742,12 @@ class ThreeScene {
     })
 
     // Enhanced planet animations
-    this.planets.forEach(({ mesh, label }, index) => {
-      const { orbit, speed, phase, bobbingPhase, rotationSpeed } = mesh.userData
+    this.planets.forEach(({ mesh, label, trail }) => {
+      const { orbit, speed, phase, bobbingPhase, rotationSpeed, baseEmissiveIntensity } = mesh.userData
       const angle = this.animationTime * speed + phase
-      const x = Math.cos(angle) * orbit
-      const z = Math.sin(angle) * orbit
+      const gravityScale = 1 - this.blackHolePulse * 0.12
+      const x = Math.cos(angle) * orbit * gravityScale
+      const z = Math.sin(angle) * orbit * gravityScale
 
       // Add vertical bobbing motion
       const bobbing = Math.sin(this.animationTime * 2 + bobbingPhase) * planetBobbing
@@ -629,15 +756,87 @@ class ThreeScene {
       mesh.position.set(x, y, z)
       label.position.set(x, y + 0.35, z)
       label.lookAt(this.camera.position)
+      mesh.material.emissiveIntensity = baseEmissiveIntensity + this.blackHolePulse * 0.22
 
       // Rotate each planet
       mesh.rotation.y += rotationSpeed
       mesh.rotation.x += rotationSpeed * 0.5
+
+      // Comet trail
+      if (trail) {
+        const trailPositions = trail.geometry.attributes.position.array
+        for (let i = trailPositions.length - 3; i >= 3; i -= 3) {
+          trailPositions[i] = trailPositions[i - 3]
+          trailPositions[i + 1] = trailPositions[i + 1 - 3]
+          trailPositions[i + 2] = trailPositions[i + 2 - 3]
+        }
+        trailPositions[0] = x
+        trailPositions[1] = y
+        trailPositions[2] = z
+        trail.geometry.attributes.position.needsUpdate = true
+        trail.material.opacity = 0.16 + baseEmissiveIntensity * 0.32 + this.blackHolePulse * 0.3
+      }
     })
+
+    // Constellation links
+    if (this.constellation) {
+      const { positions, maxSegments, line } = this.constellation
+      const thresholdSq = 8.4
+      let segmentCount = 0
+
+      for (let i = 0; i < this.planets.length; i++) {
+        for (let j = i + 1; j < this.planets.length; j++) {
+          if (segmentCount >= maxSegments) break
+          const a = this.planets[i].mesh.position
+          const b = this.planets[j].mesh.position
+          if (a.distanceToSquared(b) > thresholdSq) continue
+
+          const offset = segmentCount * 6
+          positions[offset] = a.x
+          positions[offset + 1] = a.y
+          positions[offset + 2] = a.z
+          positions[offset + 3] = b.x
+          positions[offset + 4] = b.y
+          positions[offset + 5] = b.z
+          segmentCount++
+        }
+      }
+
+      line.geometry.setDrawRange(0, segmentCount * 2)
+      line.geometry.attributes.position.needsUpdate = true
+      line.material.opacity = 0.1 + Math.sin(this.animationTime * 1.1) * 0.07 + this.blackHolePulse * 0.16
+    }
+
+    // Meteor shower
+    this.meteorSpawnTimer += delta
+    if (this.meteorSpawnTimer >= this.nextMeteorDelay && this.meteors.length < 8) {
+      this.spawnMeteor()
+      this.meteorSpawnTimer = 0
+      this.nextMeteorDelay = 0.75 + Math.random() * 1.3
+    }
+
+    for (let i = this.meteors.length - 1; i >= 0; i--) {
+      const meteor = this.meteors[i]
+      meteor.mesh.position.addScaledVector(meteor.velocity, delta)
+      meteor.life -= delta
+      const lifeRatio = Math.max(0, meteor.life / meteor.maxLife)
+      meteor.headMaterial.opacity = 0.3 + lifeRatio * 0.7
+      meteor.tailMaterial.opacity = lifeRatio * 0.45
+
+      if (meteor.life <= 0) {
+        this.scene.remove(meteor.mesh)
+        meteor.mesh.traverse((child) => {
+          if (child.geometry) child.geometry.dispose()
+        })
+        meteor.headMaterial.dispose()
+        meteor.tailMaterial.dispose()
+        this.meteors.splice(i, 1)
+      }
+    }
 
     // Subtle camera floating animation
     if (!this.controls.autoRotate) {
-      const cameraY = this.camera.position.y + Math.sin(this.animationTime * cameraFloat) * 0.1
+      const cameraY = this.baseCameraY + Math.sin(this.animationTime * cameraFloat) * 0.1
       this.camera.position.y = cameraY
     }
 
@@ -659,12 +858,12 @@ class ThreeScene {
 
     if (intersects.length > 0) {
       const intersectedObject = intersects[0].object
-      const { label, originalSize } = intersectedObject.userData
+      const { label, originalSize, baseEmissiveIntensity } = intersectedObject.userData
 
       if (!intersectedObject.userData.isHovered) {
         // Enhanced hover effect with glow
         intersectedObject.scale.setScalar(originalSize * 1.25)
-        intersectedObject.material.emissiveIntensity *= 1.5
+        intersectedObject.material.emissiveIntensity = baseEmissiveIntensity * 1.5
         intersectedObject.userData.isHovered = true
 
         // Animate the corresponding ring
@@ -676,6 +875,7 @@ class ThreeScene {
         }
       }
 
+      this.blackHoleTarget = Math.max(this.blackHoleTarget, 0.42)
       tooltip.value.visible = true
       tooltip.value.label = label
     } else {
@@ -686,8 +886,9 @@ class ThreeScene {
 
   resetPlanetScales() {
     this.planets.forEach(({ mesh }) => {
-      const { originalSize } = mesh.userData
+      const { originalSize, baseEmissiveIntensity } = mesh.userData
       mesh.scale.setScalar(originalSize)
+      mesh.material.emissiveIntensity = baseEmissiveIntensity
       mesh.userData.isHovered = false
     })
   }
@@ -699,6 +900,7 @@ class ThreeScene {
 
     window.removeEventListener('mousemove', this.handleMouseMove)
     window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('wheel', this.handleWheel)
 
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()

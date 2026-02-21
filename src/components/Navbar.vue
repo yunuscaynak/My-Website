@@ -5,7 +5,6 @@
   >
     <div class="brand">
       <a href="/" class="brandMark">Y.</a>
-      <span class="brandHint">Portfolio</span>
     </div>
 
     <div class="desktopLinks">

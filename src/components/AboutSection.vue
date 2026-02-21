@@ -54,7 +54,7 @@
           <div class="metricCard">
             <p class="metricLabel">Building</p>
             <p class="metricValue">Full-stack</p>
-            <p class="metricHint">Node, Express, Python</p>
+            <p class="metricHint">Node, NestJS, Python</p>
           </div>
           <div class="metricCard">
             <p class="metricLabel">Mindset</p>
