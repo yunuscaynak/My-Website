@@ -41,6 +41,9 @@
               {{ displayText }}<span class="cursor">|</span>
             </span>
           </div>
+          <a href="#about" class="scrollCue" aria-label="Scroll to about section" title="Scroll down">
+            <ArrowDown class="scrollCue__icon" :size="22" :stroke-width="2.4" />
+          </a>
         </div>
       </div>
 
@@ -52,6 +55,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, nextTick } from 'vue'
+import { ArrowDown } from 'lucide-vue-next'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -1130,6 +1134,38 @@ const handleMouseLeave = () => {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
+.scrollCue {
+  flex: 0 0 auto;
+  width: 2.65rem;
+  height: 2.65rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: #0c0a09;
+  background: linear-gradient(135deg, #f29f67, #7ebf9f);
+  border: 1px solid rgba(231, 223, 212, 0.32);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28), 0 0 18px rgba(242, 159, 103, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  pointer-events: auto;
+}
+
+.scrollCue:hover {
+  transform: translateY(2px);
+  filter: brightness(1.04);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.34), 0 0 24px rgba(126, 191, 159, 0.28);
+}
+
+.scrollCue:focus-visible {
+  outline: 2px solid rgba(242, 159, 103, 0.65);
+  outline-offset: 4px;
+}
+
+.scrollCue__icon {
+  display: block;
+  animation: scrollCueBounce 1.35s ease-in-out infinite;
+}
+
 .textArea {
   color: #f8f3e9;
   font-weight: 700;
@@ -1343,5 +1379,15 @@ const handleMouseLeave = () => {
   0%,
   100% { opacity: 0; }
   50% { opacity: 1; }
+}
+
+@keyframes scrollCueBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
 }
 </style>
