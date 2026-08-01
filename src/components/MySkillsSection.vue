@@ -5,7 +5,7 @@
         <p class="eyebrow">Stack</p>
         <h1 class="title">My Skills</h1>
         <p class="lede">
-          A cross-disciplinary toolkit built to ship sleek, high-performing experiences end to end.
+          Full-stack web development, data analysis, reporting, and business-focused dashboards.
         </p>
       </div>
 
@@ -44,40 +44,54 @@
 <script setup>
 const skillSets = [
   {
-    title: 'Frontend',
-    subtitle: 'Interfaces with motion, clarity, and accessibility baked in.',
-    items: ['Vue.js', 'Nuxt.js', 'Tailwind CSS', 'HTML5/CSS3', 'JavaScript'],
+    title: 'Frontend & UI',
+    subtitle: 'Business interfaces, admin panels, and responsive web flows.',
+    items: ['Vue.js', 'Next.js', 'React.js', 'Tailwind CSS', 'JavaScript'],
     gradient: 'linear-gradient(90deg, #22d3ee 0%, #6366f1 100%)',
     signal: '88%',
   },
   {
     title: 'Backend & APIs',
-    subtitle: 'Scalable services and clean data contracts.',
-    items: ['Node.js', 'NestJS', 'Express.js', 'Python', 'Django', 'PHP'],
+    subtitle: 'REST APIs, authentication, and frontend-backend integration.',
+    items: ['Node.js', 'NestJS', 'Express.js', 'TypeScript', 'REST API', 'JWT Auth'],
     gradient: 'linear-gradient(90deg, #a855f7 0%, #22d3ee 100%)',
     signal: '82%',
   },
   {
-    title: 'Data & Systems',
-    subtitle: 'Reliable persistence and tooling for production.',
-    items: ['MySQL', 'MongoDB', 'Java', 'Bootstrap', 'GitHub + Linux'],
+    title: 'Data & Reporting',
+    subtitle: 'Decision-support reports, dashboards, and database workflows.',
+    items: ['Python', 'SQL', 'Excel', 'Pandas', 'Streamlit', 'Plotly'],
     gradient: 'linear-gradient(90deg, #06b6d4 0%, #10b981 100%)',
-    signal: '76%',
+    signal: '84%',
+  },
+  {
+    title: 'Databases & Systems',
+    subtitle: 'Structured data, document stores, and production tooling.',
+    items: ['MongoDB', 'Prisma', 'SQLite', 'MySQL', 'Git', 'Linux/Server'],
+    gradient: 'linear-gradient(90deg, #f29f67 0%, #7ebf9f 100%)',
+    signal: '78%',
+  },
+  {
+    title: 'Business Platforms',
+    subtitle: 'Operational software for CRM, ERP, sales, and menu workflows.',
+    items: ['ERP/CRM Systems', 'Admin Panels', 'Sales Dashboards', 'QR Menu SaaS', 'Reporting Systems'],
+    gradient: 'linear-gradient(90deg, #f97316 0%, #22c55e 100%)',
+    signal: '80%',
   },
 ];
 
 const signals = [
   {
-    label: 'Rapid prototyping',
-    body: 'Design-to-code workflows with reusable components and atomic styling.',
+    label: 'Full-stack delivery',
+    body: 'Vue, Next.js, Node.js, NestJS, and Express workflows from interface to API.',
   },
   {
-    label: 'API-first',
-    body: 'Node.js, NestJS, and Python services that keep data flowing predictably.',
+    label: 'Data analytics',
+    body: 'Python, SQL, Excel, Pandas, Streamlit, and Plotly for reporting dashboards.',
   },
   {
-    label: 'Data layer',
-    body: 'Structured schemas in MySQL plus flexible documents in MongoDB for dynamic products.',
+    label: 'Business systems',
+    body: 'ERP/CRM, admin panels, JWT auth, database management, and Linux/server basics.',
   },
 ];
 </script>

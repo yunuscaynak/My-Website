@@ -7,17 +7,18 @@
       <div class="skills-header px-15">
         <div>
           <p class="skills-description">
-            Frontend Developer · Vue/Nuxt/Next/React · Node.js · NestJS · Python · Django · Docker · Git/Linux
+            Full-Stack & Data Analytics Developer · Vue/Next · Node/NestJS · Python/SQL · Excel dashboards · Git/Linux
           </p>
         </div>
         <div class="skills-tags">
-          <span class="skill-tag">Nuxt.js</span>
+          <span class="skill-tag">Vue.js</span>
           <span class="skill-tag">Next.js</span>
-          <span class="skill-tag">React.js</span>
           <span class="skill-tag">Node.js</span>
           <span class="skill-tag">NestJS</span>
           <span class="skill-tag">Python</span>
-          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Excel</span>
+          <span class="skill-tag">Git/Linux</span>
         </div>
       </div>
 
@@ -107,15 +108,16 @@ const SCENE_CONFIG = {
 
 const SKILLS_DATA = [
   { label: 'Vue.js', color: 0x42b883, orbit: 2.2, size: 0.18, speed: 0.62, category: 'frontend', glowIntensity: 0.35 },
-  { label: 'Nuxt.js', color: 0x00dc82, orbit: 2.65, size: 0.18, speed: 0.57, category: 'frontend', glowIntensity: 0.4 },
-  { label: 'Next.js', color: 0xffffff, orbit: 3.1, size: 0.18, speed: 0.53, category: 'frontend', glowIntensity: 0.4 },
-  { label: 'React', color: 0x61dafb, orbit: 3.55, size: 0.18, speed: 0.49, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'Next.js', color: 0xffffff, orbit: 2.65, size: 0.18, speed: 0.57, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'React', color: 0x61dafb, orbit: 3.1, size: 0.18, speed: 0.53, category: 'frontend', glowIntensity: 0.4 },
+  { label: 'TypeScript', color: 0x3178c6, orbit: 3.55, size: 0.18, speed: 0.49, category: 'language', glowIntensity: 0.4 },
   { label: 'Node.js', color: 0x8cc84b, orbit: 4.0, size: 0.2, speed: 0.45, category: 'backend', glowIntensity: 0.35 },
   { label: 'NestJS', color: 0xe0234e, orbit: 4.45, size: 0.19, speed: 0.42, category: 'backend', glowIntensity: 0.45 },
   { label: 'Python', color: 0x3671a5, orbit: 4.9, size: 0.18, speed: 0.39, category: 'language', glowIntensity: 0.3 },
-  { label: 'Django', color: 0x0c4b33, orbit: 5.35, size: 0.17, speed: 0.36, category: 'backend', glowIntensity: 0.4 },
-  { label: 'Docker', color: 0x2496ed, orbit: 5.8, size: 0.17, speed: 0.33, category: 'devops', glowIntensity: 0.4 },
-  { label: 'Git/Linux', color: 0xf97316, orbit: 6.25, size: 0.16, speed: 0.3, category: 'tooling', glowIntensity: 0.35 }
+  { label: 'SQL/Excel', color: 0x10b981, orbit: 5.35, size: 0.17, speed: 0.36, category: 'data', glowIntensity: 0.4 },
+  { label: 'Pandas', color: 0x150458, orbit: 5.8, size: 0.17, speed: 0.33, category: 'data', glowIntensity: 0.4 },
+  { label: 'Streamlit', color: 0xff4b4b, orbit: 6.25, size: 0.16, speed: 0.3, category: 'data', glowIntensity: 0.35 },
+  { label: 'Git/Linux', color: 0xf97316, orbit: 6.7, size: 0.16, speed: 0.28, category: 'tooling', glowIntensity: 0.35 }
 ]
 
 // Reactive references

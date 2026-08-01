@@ -6,11 +6,11 @@ import VideoBackground from './components/VideoBackground.vue';
 // import { onMounted, onBeforeUnmount } from 'vue';
 
 // onMounted(() => {
-//   // Mouse move eventi artık dinlenmeyecek
+//   // The mouse move event will no longer be listened to
 // });
 
 // onBeforeUnmount(() => {
-//   // Mouse move event listener kaldırılacak
+//   // The mouse move event listener will be removed
 // });
 </script>
 

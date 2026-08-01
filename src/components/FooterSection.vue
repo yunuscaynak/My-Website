@@ -4,20 +4,23 @@
       <div class="space-y-3">
         <p class="eyebrow">Yunus Caynak</p>
         <h2 class="title">Futuristic web experiences.</h2>
-        <p class="hint">Nuxt/Vue front-ends, fast APIs, design-forward delivery.</p>
+        <p class="hint">Full-stack web apps, REST APIs, and data dashboards.</p>
       </div>
 
       <div class="grid gap-2 text-white/80">
         <p class="font-bruno text-white">Quick Links</p>
         <a href="#home" class="link">Home</a>
         <a href="#about" class="link">About</a>
+        <a href="#resume" class="link">CV</a>
         <a href="#mySkills" class="link">Skills</a>
+        <a href="#projects" class="link">Projects</a>
         <a href="#contact" class="link">Contact</a>
       </div>
 
       <div class="space-y-3">
         <p class="font-bruno text-white">Get in touch</p>
-        <a href="mailto:caynakyunus21@gmail.com" class="link">caynakyunus21@gmail.com</a>
+        <a href="mailto:yunuscaynak1@gmail.com" class="link">yunuscaynak1@gmail.com</a>
+        <a href="/yunuscaynak-cv.pdf" download class="link">Download CV</a>
         <p class="hint">Built with Vue, Tailwind, Firebase.</p>
       </div>
     </div>

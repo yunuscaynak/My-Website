@@ -12,14 +12,14 @@ const router = createRouter({
     
   ],
   scrollBehavior(to, from, savedPosition) {
-    // Sayfa içi yönlendirme yapıldığında doğru kaydırma işlemini yapıyoruz
+    // Handle scrolling correctly for in-page navigation
     if (to.hash) {
       return {
         el: to.hash,
-        behavior: 'smooth', // Kaydırma animasyonuyla yapılacak
+        behavior: 'smooth', // Use smooth scrolling
       };
     }
-    return { top: 0 }; // Sayfa başına kaydırma
+    return { top: 0 }; // Scroll to top
   },
 })
 

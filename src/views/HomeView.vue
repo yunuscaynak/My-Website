@@ -1,22 +1,24 @@
 <script setup>
 import { onMounted } from 'vue'
 import AboutSection from '@/components/AboutSection.vue';
+import ResumeSection from '@/components/ResumeSection.vue';
 import MySkillsSection from '@/components/MySkillsSection.vue';
+import ProjectsSection from '@/components/ProjectsSection.vue';
 import ContactSection from '@/components/ContactSection.vue';
 import FooterSection from '@/components/FooterSection.vue';
 
 onMounted(() => {
-  // Sayfa başlığını güncelle
+  // Update the page title
   document.title = 'Yunus Caynak'
 
-  // Meta etiketlerini güncelle
+  // Update meta tags
   const descriptionMetaTag = document.querySelector('meta[name="description"]')
   if (descriptionMetaTag) {
-    descriptionMetaTag.setAttribute('content', 'Yunus Caynak’ın web geliştirme projeleri hakkında bilgi.')
+    descriptionMetaTag.setAttribute('content', 'Information about Yunus Caynak web development projects.')
   } else {
     const newMetaTag = document.createElement('meta')
     newMetaTag.setAttribute('name', 'description')
-    newMetaTag.setAttribute('content', 'Yunus Caynak’ın web geliştirme projeleri hakkında bilgi.')
+    newMetaTag.setAttribute('content', 'Information about Yunus Caynak web development projects.')
     document.head.appendChild(newMetaTag)
   }
 })
@@ -29,7 +31,9 @@ onMounted(() => {
     </div>
     <div class="relative px-6 py-4 md:px-12">
       <AboutSection />
+      <ResumeSection />
       <MySkillsSection />
+      <ProjectsSection />
       <ContactSection />
     </div>
   </main>

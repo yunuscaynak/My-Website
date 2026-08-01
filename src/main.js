@@ -6,7 +6,7 @@ import router from './router'
 
 const app = createApp(App)
 
-// Sadece router'ı kullanıyoruz, vue-meta kaldırıldı
+// Use only the router; vue-meta was removed
 app.use(router)
 
 app.mount('#app')

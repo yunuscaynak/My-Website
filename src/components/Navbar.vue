@@ -28,7 +28,7 @@
       class="mobilePanel"
       :class="{ open: isMenuOpen }"
     >
-      <button @click="closeMenu" class="closeButton" aria-label="Menüyü kapat">
+      <button @click="closeMenu" class="closeButton" aria-label="Close menu">
         <span class="closeIcon"></span>
         <span class="closeLabel">Close</span>
       </button>
@@ -55,7 +55,9 @@ const isMenuOpen = ref(false);
 const links = [
   { to: '#home', text: 'Home' },
   { to: '#about', text: 'About Me' },
+  { to: '#resume', text: 'CV' },
   { to: '#mySkills', text: 'My Skills' },
+  { to: '#projects', text: 'Projects' },
   { to: '#contact', text: 'Contact Me' },
 ];
 
